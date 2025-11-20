@@ -1,16 +1,19 @@
 %YAML 1.2
 --- 
 name: "8x256-256"
-gpu: 0
+gpu: "none"
 dataset:
   num_chunks: 500_000_000
   allow_less_chunks: true
   train_ratio: 0.95
   sort_type: name
-  input_train: 
-    - '/mnt/t82data/training-run1-test80-202309*/'
-  input_test:
-    - '/mnt/testdata/*/'
+  input: 
+    - 'training-run1--20240819-1917/'
+    # - 'training-run1--20200711-2017/'
+  # input_train: 
+  #   - 'training-run1--20200711-2017/'
+  # input_test:
+  #   - '/testdata/*/'
   # input_validation:
   # #  - '/mnt/data/validation-rescored/'
   train_workers: 8

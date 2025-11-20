@@ -60,7 +60,13 @@ class ShuffleBuffer:
 
             If the buffer is not yet full, returns None
         """
-        assert len(item) == self.elem_size, len(item)
+        if len(item) != self.elem_size:
+            raise AssertionError(
+                f"ShuffleBuffer record size mismatch:\n"
+                f"  expected elem_size = {self.elem_size}\n"
+                f"  got len(item)      = {len(item)}\n"
+                f"  difference         = {self.elem_size - len(item)}\n"
+            )
         # putting the new item in a random location, and appending
         # the displaced item to the end of the buffer achieves a full
         # random shuffle (Fisher-Yates)

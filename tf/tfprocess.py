@@ -20,6 +20,7 @@
 import numpy as np
 import os
 import tensorflow as tf
+import tensorflow_addons as tfa
 import time
 import bisect
 import attention_policy_map as apm
@@ -564,11 +565,7 @@ class TFProcess:
         elif default_activation == "mish":
             self.net.set_defaultactivation(
                 pb.NetworkFormat.DEFAULT_ACTIVATION_MISH)
-            try:
-                self.DEFAULT_ACTIVATION = tf.keras.activations.mish
-            except:
-                import tensorflow_addons as tfa
-                self.DEFAULT_ACTIVATION = tfa.activations.mish
+            self.DEFAULT_ACTIVATION = tfa.activations.mish
 
         else:
             raise ValueError("Unknown default activation type: {}".format(
@@ -613,15 +610,20 @@ class TFProcess:
         self.renorm_momentum = self.cfg["training"].get(
             "renorm_momentum", 0.99)
 
-        if self.cfg['gpu'] == 'all':
-            gpus = tf.config.experimental.list_physical_devices('GPU')
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        print(f"Physical GPUs: {'None' if not gpus else gpus}")
+
+        # CPU-only mode (no GPUs or gpu set to -1 / 'cpu' / 'none')
+        if not gpus or str(self.cfg['gpu']).lower() in ["-1", "cpu", "none"]:
+            self.strategy = None
+
+        elif self.cfg['gpu'] == 'all':
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
             self.strategy = tf.distribute.MirroredStrategy()
             tf.distribute.experimental_set_strategy(self.strategy)
         elif "," in str(self.cfg['gpu']):
             active_gpus = []
-            gpus = tf.config.experimental.list_physical_devices('GPU')
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
             for i in self.cfg['gpu'].split(","):
@@ -629,8 +631,6 @@ class TFProcess:
             self.strategy = tf.distribute.MirroredStrategy(active_gpus)
             tf.distribute.experimental_set_strategy(self.strategy)
         else:
-            gpus = tf.config.experimental.list_physical_devices('GPU')
-            print(gpus)
             tf.config.experimental.set_visible_devices(gpus[self.cfg['gpu']],
                                                        'GPU')
             tf.config.experimental.set_memory_growth(gpus[self.cfg['gpu']],
@@ -694,9 +694,9 @@ class TFProcess:
 
 
         try:
-            import tensorflow_models as tfm
-
-            flops =  tfm.core.train_utils.try_count_flops(self.model)
+            # import tensorflow_models as tfm
+            from official.core import train_utils
+            flops = train_utils.try_count_flops(self.model)
             print(f"FLOPS: {flops / 10 ** 9:.03} G")
         except:
             print("won't count flops")
@@ -1022,6 +1022,7 @@ class TFProcess:
                                 "value_st_cat",
                                 "reg",
                                 "moves_left",
+                                "future"
                                 ]
         self.loss_weights = self.cfg["training"]["loss_weights"]
         for key in self.loss_weights:
@@ -1818,7 +1819,7 @@ class TFProcess:
         for metric in self.test_metrics:
             metric.reset()
         for _ in range(0, test_batches):
-            x, y, z, q, m, st_q, opp_idx, next_idx = next(self.test_iter)
+            x, y, z, q, m, st_q, opp_idx, next_idx, _ = next(self.test_iter)
             if self.strategy is not None:
                 metrics = self.strategy_calculate_test_summaries_inner_loop(
                     x, y, z, q, m, st_q, opp_idx, next_idx)
