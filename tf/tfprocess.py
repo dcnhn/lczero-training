@@ -1494,7 +1494,7 @@ class TFProcess:
         # Run training for this batch
         grads = None
         for batch_id in range(batch_splits):
-            x, y, z, q, m, st_q, opp_idx, next_idx = next(self.train_iter)
+            x, y, z, q, m, st_q, opp_idx, next_idx, _  = next(self.train_iter)
             if self.strategy is not None:
                 metrics, new_grads = self.strategy_process_inner_loop(
                     x, y, z, q, m, st_q, opp_idx, next_idx)
@@ -1656,12 +1656,13 @@ class TFProcess:
                 swa_path = path + "-swa-" + str(evaled_steps)
                 self.net.pb.training_params.training_steps = evaled_steps
 
-                backup = self.read_weights()
-                for (swa, w) in zip(self.swa_weights, self.model.weights):
-                    w.assign(swa.read_value())
-                tf.saved_model.save(self.model, swa_path)
-                for (old, w) in zip(backup, self.model.weights):
-                    w.assign(old)
+                if self.swa_enabled:
+                    backup = self.read_weights()
+                    for (swa, w) in zip(self.swa_weights, self.model.weights):
+                        w.assign(swa.read_value())
+                    tf.saved_model.save(self.model, swa_path)
+                    for (old, w) in zip(backup, self.model.weights):
+                        w.assign(old)
 
 
 
