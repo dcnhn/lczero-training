@@ -209,7 +209,7 @@ def convert_v7b_to_tuple(content):
     "4si7432s832sBBBBBBBbfffffffffffffffIHHff"
     v6 struct format is (8356 bytes total):
     field   type     type string     name/description                                 size (bytes)       1st byte index
-    01      char     4s              version[4];                                         4                   0
+    01      char     4s              version[4];                                      4                   0
     02      int32_t  i               input_format;                                    4                   4
     03      float    7432s           probabilities[1858];                             7432                8
     04      uint64_t 832s            planes[104];                                     832                 7440
