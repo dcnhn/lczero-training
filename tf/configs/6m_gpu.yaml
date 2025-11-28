@@ -9,16 +9,8 @@ dataset:
   sort_type: name
   input: 
     - 'training-run1--20240819-1917/'
-    # - '../training-run1--20240819-1917/'
-    # - 'training-run1--20200711-2017/'
-  # input_train: 
-  #   - 'training-run1--20200711-2017/'
-  # input_test:
-  #   - '/testdata/*/'
-  # input_validation:
-  # #  - '/mnt/data/validation-rescored/'
-  train_workers: 2
-  test_workers: 1
+  train_workers: 4
+  test_workers: 4
   fast_chunk_loading: false
   # pc_min: 0
   # pc_max: 6
@@ -29,7 +21,7 @@ training:
     swa_max_n: 10
     swa_steps: 100
     max_grad_norm: 10.0
-    batch_size: 64
+    batch_size: 2048
     num_batch_splits: 1
     value_focus_min: 1.0
     value_focus_slope: 0.0
@@ -44,18 +36,18 @@ training:
     # validation_steps: 5000
     num_test_positions: 2048
     train_avg_report_steps: 50
-    total_steps: 500
+    total_steps: 2_200_000
     checkpoint_steps: 100_000
     shuffle_size: 65536
     warmup_steps: 1000
     mask_legal_moves: true
     lr_values: 
-        - 0.001
-        - 0.000316
-        - 0.0001
+        - 0.0005        # 5e-4
+        - 0.000158      # 1.58e-4
+        - 0.00005       # 5e-5
     lr_boundaries:
-        - 2_400_000
-        - 2_700_000
+        - 1_600_000
+        - 1_800_000
     loss_weights:
         policy: 1.0
         policy_optimistic_st: 0.0
@@ -64,11 +56,11 @@ training:
         policy_next: 0.00
         value_winner: 1.0
         value_q: 1.0
-        value_q_cat: 0.1
+        value_q_cat: 0.0 # only used in 240m
         value_st: 1.0 # larger because mse loss
         value_q_err: 1.0  # both error weights should be the same
         value_st_err: 1.0
-        value_st_cat: 0.1
+        value_st_cat: 0.0 # only used in 240m
         moves_left: 1.0
         reg: 1.0
         future: 0.1
@@ -124,7 +116,7 @@ model:
 
     # Ablations
     omit_qkv_biases: true # these two increases training speed by ~10% on BT4 
-    encoder_rms_norm: false # without quality degradation
+    encoder_rms_norm: true # without quality degradation
 
     # Output heads
     policy_optimistic_st: false

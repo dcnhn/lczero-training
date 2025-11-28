@@ -8,15 +8,8 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input: 
-    - 'training-run1--20240819-1917/'
-    # - '../training-run1--20240819-1917/'
-    # - 'training-run1--20200711-2017/'
-  # input_train: 
-  #   - 'training-run1--20200711-2017/'
-  # input_test:
-  #   - '/testdata/*/'
-  # input_validation:
-  # #  - '/mnt/data/validation-rescored/'
+    # - 'training-run1--20240819-1917/'
+    - 'training-run1--20230505-0217/'
   train_workers: 2
   test_workers: 1
   fast_chunk_loading: false
@@ -29,7 +22,7 @@ training:
     swa_max_n: 10
     swa_steps: 100
     max_grad_norm: 10.0
-    batch_size: 64
+    batch_size: 32
     num_batch_splits: 1
     value_focus_min: 1.0
     value_focus_slope: 0.0
@@ -37,14 +30,14 @@ training:
     renorm: true
     renorm_max_r: 1.0
     renorm_max_d: 0.0
-    test_steps: 1_000
+    test_steps: 100
     disable_pb_checkpointing: false
     checkpoint_activations: false
 
     # validation_steps: 5000
-    num_test_positions: 2048
+    num_test_positions: 32
     train_avg_report_steps: 50
-    total_steps: 500
+    total_steps: 100
     checkpoint_steps: 100_000
     shuffle_size: 65536
     warmup_steps: 1000

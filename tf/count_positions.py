@@ -41,11 +41,12 @@ if __name__ == "__main__":
     num_positions = 0
     for cnt, filename in enumerate(chunks):
         with gzip.open(filename, "rb") as chunk_file:
-            if cnt % 200 == 0:
-                print("reading chunk", cnt + 1, "of", len(chunks), ":", filename)
             chunk_file.seek(0)
             chunkdata = chunk_file.read()
             version = chunkdata[0:4]
+            if cnt % 500 == 0:
+                ver_str = "V6" if version == V6_VERSION else "NA"
+                print(f"Chunk version {ver_str}. reading chunk {cnt + 1} of {len(chunks)}: {filename}")
             record_size = struct_sizes.get(version, None)
             n_chunks = len(chunkdata) // record_size
             num_positions += n_chunks
