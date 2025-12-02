@@ -38,17 +38,34 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     chunks = get_all_chunks(args.paths)
+
+    corrupted_file = open("corrupted.txt", "a")
+
     num_positions = 0
     for cnt, filename in enumerate(chunks):
-        with gzip.open(filename, "rb") as chunk_file:
-            chunk_file.seek(0)
-            chunkdata = chunk_file.read()
-            version = chunkdata[0:4]
-            if cnt % 500 == 0:
-                ver_str = "V6" if version == V6_VERSION else "NA"
-                print(f"Chunk version {ver_str}. reading chunk {cnt + 1} of {len(chunks)}: {filename}")
-            record_size = struct_sizes.get(version, None)
-            n_chunks = len(chunkdata) // record_size
-            num_positions += n_chunks
+        try:
+            with gzip.open(filename, "rb") as chunk_file:
+                chunk_file.seek(0)
+                chunkdata = chunk_file.read()
+                version = chunkdata[0:4]
+                if cnt % 500 == 0:
+                    ver_str = "V6" if version == V6_VERSION else "NA"
+                    print(f"Chunk version {ver_str}. reading chunk {cnt + 1} of {len(chunks)}: {filename}")
+                record_size = struct_sizes.get(version, None)
 
+
+                if record_size is None:
+                    print("Unknown chunk version in file:", filename)
+                    corrupted_file.write(filename + "\n")
+                    continue
+
+                n_chunks = len(chunkdata) // record_size
+                num_positions += n_chunks
+
+        except Exception as e:
+            print(f"GZIP error while reading {filename}: {e}")
+            corrupted_file.write(filename + "\n")
+
+    corrupted_file.close()
     print("chunks found:", len(chunks), "total positions:", num_positions)
+    print("Corrupted list saved to corrupted.txt")

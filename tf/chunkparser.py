@@ -557,7 +557,7 @@ class ChunkParserInner:
             yield record
 
     def single_file_gen(self, filename):
-        
+        try:
             with gzip.open(filename, "rb") as chunk_file:
                 version = chunk_file.read(4)
                 chunk_file.seek(0)
@@ -571,6 +571,9 @@ class ChunkParserInner:
                 chunkdata = chunk_file.read()
                 for item in self.sample_record(chunkdata):
                     yield item
+        except Exception as e:
+            print(f"GZIP error while reading {filename}: {e}")
+            return
 
     def sequential_gen(self):
         for filename in self.chunks:
