@@ -8,7 +8,7 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input: 
-    # - 'training-run1--20240819-1917/'
+    - 'training-run1--20240819-1917/'
     - 'training-run1--20230505-0217/'
   train_workers: 2
   test_workers: 1
