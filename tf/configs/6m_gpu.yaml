@@ -8,8 +8,34 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input: 
+    - 'training-run1--20210605-0516/'
+    - 'training-run1--20230415-1317/'
+    - 'training-run1--20230415-1417/'
+    - 'training-run1--20230505-0217/'
+    - 'training-run1--20230505-0317/'
+    - 'training-run1--20230505-0817/'
+    - 'training-run1--20230505-0917/'
     - 'training-run1--20240819-1917/'
-  train_workers: 4
+    - 'training-run1--20250209-1017/'
+    - 'training-run2--20210605-0517/'
+    - 'training-run3--20210605-0521/'
+    - 'training-run3-test75-20210314-1134/'
+    - 'training-run3-test75-20210603-1203/'
+    - 'training-run3-test75-20210618-0354/'
+    - 'training-run3-test75-20210815-1418/'
+    - 'training-run3-test75-20210923-1917/'
+    - 'training-run3-test75-20210923-2017/'
+    - 'training-run3-test75-20210923-2117/'
+    - 'training-run3-test75-20210923-2217/'
+    - 'training-run3-test75-20210923-2317/'
+    - 'training-run3-test75-20210924-0117/'
+    - 'training-run3-test75-20210924-0217/'
+    - 'training-run3-test75-20210924-0517/'
+    - 'training-run3-test75-20210924-0617/'
+    - 'training-run3-test75-20210924-0717/'
+    - 'training-run3-test75-20210924-0817/'
+    - 'training-run3-test75-20210924-0917/'
+  train_workers: 16
   test_workers: 4
   fast_chunk_loading: false
   # pc_min: 0
@@ -22,14 +48,14 @@ training:
     swa_steps: 100
     max_grad_norm: 10.0
     batch_size: 2048
-    num_batch_splits: 1
+    num_batch_splits: 4
     value_focus_min: 1.0
     value_focus_slope: 0.0
     lookahead_optimizer: false
     renorm: true
     renorm_max_r: 1.0
     renorm_max_d: 0.0
-    test_steps: 1_000
+    test_steps: 1000
     disable_pb_checkpointing: false
     checkpoint_activations: false
 
