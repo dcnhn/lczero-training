@@ -4,3 +4,6 @@ protobuf
 pyyaml
 rich
 tf-models-official
+tensorflow-addons
+aiohttp
+aiofiles

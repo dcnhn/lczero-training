@@ -11,4 +11,6 @@ run init.sh in root
 # Start training
 python tf/train.py --cfg tf\configs\example.yaml --output /tmp/mymodel.txt
 
+python tf/find_corrupted_files.py merged/
+
 # Split data

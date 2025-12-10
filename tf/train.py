@@ -18,6 +18,10 @@
 
 import argparse
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+import tensorflow as tf
+
 import yaml
 import sys
 import glob
@@ -29,10 +33,12 @@ from chunkparser import ChunkParser
 import random
 import pickle
 
+from chunkparsefunc import parse_function
+from tfprocess import TFProcess
+
 
 SKIP = 32
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def fast_get_chunks(d):
@@ -246,10 +252,6 @@ def main(cmd):
                                         # pc_min=pc_min,
                                         # pc_max=pc_max,
                                         workers=0)
-
-    import tensorflow as tf
-    from chunkparsefunc import parse_function
-    from tfprocess import TFProcess
 
     print("Creating TFProcess")
     tfprocess = TFProcess(cfg)

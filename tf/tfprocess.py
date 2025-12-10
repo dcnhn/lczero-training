@@ -620,7 +620,7 @@ class TFProcess:
         elif self.cfg['gpu'] == 'all':
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
-            self.strategy = tf.distribute.MirroredStrategy()
+            self.strategy = tf.distribute.MirroredStrategy(cross_device_ops=tf.distribute.NcclAllReduce())
             tf.distribute.experimental_set_strategy(self.strategy)
         elif "," in str(self.cfg['gpu']):
             active_gpus = []
@@ -628,7 +628,7 @@ class TFProcess:
                 tf.config.experimental.set_memory_growth(gpu, True)
             for i in self.cfg['gpu'].split(","):
                 active_gpus.append("GPU:" + i)
-            self.strategy = tf.distribute.MirroredStrategy(active_gpus)
+            self.strategy = tf.distribute.MirroredStrategy(active_gpus, cross_device_ops=tf.distribute.NcclAllReduce())
             tf.distribute.experimental_set_strategy(self.strategy)
         else:
             tf.config.experimental.set_visible_devices(gpus[self.cfg['gpu']],
