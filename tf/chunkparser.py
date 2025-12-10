@@ -202,7 +202,7 @@ class ChunkParser:
     
 
 
-def convert_v7b_to_tuple(content):
+def convert_v6b_to_tuple(content):
     """
     Unpack a v6 binary record to 5-tuple (state, policy pi, result, q, m)
 
@@ -259,14 +259,6 @@ def convert_v7b_to_tuple(content):
     35      float    1536s           fut;                                             1536                23220
     """
     # unpack the V6 content from raw byte array, arbitrarily chose 4 2-byte values
-    # for the 8 "reserved" bytes
-    # (ver, input_format, probs, planes, us_ooo, us_oo, them_ooo, them_oo,
-    #     stm, rule50_count, invariance_info, dep_result, root_q, best_q,
-    #     root_d, best_d, root_m, best_m, plies_left, result_q, result_d,
-    #     played_q, played_d, played_m, orig_q, orig_d, orig_m, visits,
-    #     played_idx, best_idx, pol_kld, st_q, st_d, opp_played_idx, next_played_idx,
-    #     f1, f2, f3, f4, f5, f6, f7, f8, opp_probs, next_probs, fut) = v7b_struct.unpack(content)
-
     (ver, input_format, probs, planes, us_ooo, us_oo, them_ooo, them_oo,
         stm, rule50_count, invariance_info, dep_result, root_q, best_q,
         root_d, best_d, root_m, best_m, plies_left, result_q, result_d,
@@ -493,6 +485,12 @@ class ChunkParserInner:
 
         ppb = 12
 
+        def in_range(root_q, st_q, root_d):
+            e = 1e-2
+            return (-1.0 - e <= root_q <= 1.0 + e) \
+                and (-1.0 - e <= st_q <= 1.0 + e) \
+                and (0.0 - e <= root_d <= 1.0 + e)
+
         for i in range(n_chunks):
             start = i*record_size
             plane = chunkdata[start + 7440:start + 7440 + 8 * ppb]
@@ -520,6 +518,14 @@ class ChunkParserInner:
                 best_q = struct.unpack("f", record[8284:8288])[0]
                 orig_q = struct.unpack("f", record[8328:8332])[0]
                 pol_kld = struct.unpack("f", record[8348:8352])[0]
+
+                # Get those fields for sanity checks
+                root_q = struct.unpack("f", record[8280:8284])[0]
+                root_d = struct.unpack("f", record[8288:8292])[0]
+                st_q = struct.unpack("f", record[8352:8356])[0]
+
+                if not in_range(root_q, st_q, root_d):
+                    continue # Skip this record.
 
                 # if orig_q is NaN or pol_kld is 0, accept, else accept based on diff focus
 
@@ -628,7 +634,7 @@ class ChunkParserInner:
         applying a random symmetry on the way.
         """
         for r in gen:
-            yield convert_v7b_to_tuple(r)
+            yield convert_v6b_to_tuple(r)
 
     def batch_gen(self, gen, allow_partial=True):
         """
