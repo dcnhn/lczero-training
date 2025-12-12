@@ -13,4 +13,8 @@ python tf/train.py --cfg tf\configs\example.yaml --output /tmp/mymodel.txt
 
 python tf/find_corrupted_files.py merged/
 
+tensorboard --logdir leelalogs --port 6031 --host localhost
+
 # Split data
+
+Training start: 11.12.2025 10:20
