@@ -1405,6 +1405,13 @@ class TFProcess:
 
             total_loss = self.lossMix(losses)
 
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(total_loss, tf.float32), "total_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_loss, tf.float32), "policy_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_winner_loss, tf.float32), "value_winner_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy, tf.float32), "policy logits contain NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_winner, tf.float32), "value_winner head contains NaN/Inf")
+
             metrics = [
                 policy_loss,
                 policy_optimistic_st_loss,
@@ -1460,6 +1467,12 @@ class TFProcess:
         max_grad_norm = self.cfg['training'].get(
             'max_grad_norm', 10000.0) * effective_batch_splits
         grads, grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
+
+        if self.cfg['training'].get('check_numerics', False):
+            tf.debugging.check_numerics(tf.cast(grad_norm, tf.float32), "grad_norm contains NaN/Inf")
+            for i, g in enumerate(grads):
+                if g is not None:
+                    tf.debugging.check_numerics(tf.cast(g, tf.float32), f"Gradient {i} contains NaN/Inf")
         self.optimizer.apply_gradients(zip(grads,
                                            self.model.trainable_weights),
                                        experimental_aggregate_gradients=False)

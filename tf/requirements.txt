@@ -1,6 +1,6 @@
 tensorflow[and-cuda]==2.15.0.post1
 numpy
-protobuf
+protobuf==3.20.3
 pyyaml
 rich
 tf-models-official
