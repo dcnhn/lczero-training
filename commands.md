@@ -18,3 +18,4 @@ tensorboard --logdir leelalogs --port 6031 --host localhost
 # Split data
 
 Training start: 11.12.2025 10:20
+28.01.2026: S06 adam, board-s05 s05-single-adam

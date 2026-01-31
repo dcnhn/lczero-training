@@ -16,9 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Leela Zero.  If not, see <http://www.gnu.org/licenses/>.
 
-
-import numpy as np
 import os
+import numpy as np
 import tensorflow as tf
 import tensorflow_addons as tfa
 import time
@@ -611,10 +610,12 @@ class TFProcess:
             "renorm_momentum", 0.99)
 
         gpus = tf.config.experimental.list_physical_devices('GPU')
+        cfg_gpus = str(self.cfg['gpu']).lower()
         print(f"Physical GPUs: {'None' if not gpus else gpus}")
+        print(f"GPUs in yaml-config: {cfg_gpus}")
 
         # CPU-only mode (no GPUs or gpu set to -1 / 'cpu' / 'none')
-        if not gpus or str(self.cfg['gpu']).lower() in ["-1", "cpu", "none"]:
+        if not gpus or cfg_gpus in ["-1", "cpu", "none"]:
             self.strategy = None
 
         elif self.cfg['gpu'] == 'all':
