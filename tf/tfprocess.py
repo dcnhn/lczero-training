@@ -772,6 +772,9 @@ class TFProcess:
             return tf.reduce_mean(loss)
 
         def correct_policy(target, output, temperature=1.0):
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(target, tf.float32), "target has NaNs or Infs")
+                tf.debugging.check_numerics(tf.cast(output, tf.float32), "output has NaNs or Infs")
             # Calculate loss on policy head
             if self.cfg["training"].get("mask_legal_moves"):
                 # extract mask for legal moves from target policy
@@ -781,9 +784,14 @@ class TFProcess:
                 output = tf.where(move_is_legal, output, illegal_filler)
             # y_ still has -1 on illegal moves, flush them to 0
             target = tf.pow(tf.nn.relu(target), 1.0 / temperature)
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(target, tf.float32), "target has NaNs or Infs")
             # normalize
             target = target / \
                 tf.reduce_sum(input_tensor=target, axis=1, keepdims=True)
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(target, tf.float32), "target has NaNs or Infs")
+                tf.debugging.check_numerics(tf.cast(output, tf.float32), "output has NaNs or Infs")
             return target, output
 
         def policy_loss(target, output, weights=None, temperature=1.0):
@@ -1317,8 +1325,18 @@ class TFProcess:
     def process_inner_loop(self, x, y, z, q, m, st_q, opp_idx, next_idx):
 
         with tf.GradientTape() as tape:
+            # TODO: Add proper comments
+            ctx = tf.distribute.get_replica_context()
+            rid = ctx.replica_id_in_sync_group if ctx is not None else -1
+            x32 = tf.cast(x, tf.float32)
+            bad = tf.reduce_any(tf.logical_not(tf.math.is_finite(x32)))
+            tf.cond(bad,
+                    lambda: tf.print("replica", rid, ": x has NaN/Inf"),
+                    lambda: tf.no_op())
+            tf.debugging.assert_equal(bad, False, message="x has NaN/Inf")
 
             outputs = self.model(x, training=True)
+
             value_winner = outputs.get("value_winner")
             value_winner_err = None
             value_q = outputs.get("value_q")
@@ -1334,6 +1352,19 @@ class TFProcess:
 
             policy_opponent = outputs.get("policy_opponent")
             policy_next = outputs.get("policy_next")
+
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(value_winner, tf.float32), "value_winner contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q, tf.float32), "value_q contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q_err, tf.float32), "value_q_err contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q_cat, tf.float32), "value_q_cat contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st, tf.float32), "value_st contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st_err, tf.float32), "value_st_err contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st_cat, tf.float32), "value_st_cat contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy, tf.float32), "policy contains NaN/Inf")
+                if policy_optimistic_st is not None:
+                    tf.debugging.check_numerics(tf.cast(policy_optimistic_st, tf.float32), "policy_optimistic_st contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_soft, tf.float32), "policy_soft contains NaN/Inf")
 
             # Policy losses
             policy_loss = self.policy_loss_fn(y, policy)
@@ -1403,14 +1434,26 @@ class TFProcess:
                 "reg": reg_term,
             }
 
+            if self.cfg["training"].get("check_numerics", False):
+                tf.debugging.check_numerics(tf.cast(policy_loss, tf.float32), "policy_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_optimistic_st_loss, tf.float32), "policy_optimistic_st_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_soft_loss, tf.float32), "policy_soft_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_opponent_loss, tf.float32), "policy_opponent_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(policy_next_loss, tf.float32), "policy_next_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_winner_loss, tf.float32), "value_winner_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q_loss, tf.float32), "value_q_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q_err_loss, tf.float32), "value_q_err_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_q_cat_loss, tf.float32), "value_q_cat_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st_loss, tf.float32), "value_st_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st_err_loss, tf.float32), "value_st_err_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(value_st_cat_loss, tf.float32), "value_st_cat_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(moves_left_loss, tf.float32), "moves_left_loss contains NaN/Inf")
+                tf.debugging.check_numerics(tf.cast(reg_term, tf.float32), "reg_term contains NaN/Inf")
+
             total_loss = self.lossMix(losses)
 
             if self.cfg["training"].get("check_numerics", False):
                 tf.debugging.check_numerics(tf.cast(total_loss, tf.float32), "total_loss contains NaN/Inf")
-                tf.debugging.check_numerics(tf.cast(policy_loss, tf.float32), "policy_loss contains NaN/Inf")
-                tf.debugging.check_numerics(tf.cast(value_winner_loss, tf.float32), "value_winner_loss contains NaN/Inf")
-                tf.debugging.check_numerics(tf.cast(policy, tf.float32), "policy logits contain NaN/Inf")
-                tf.debugging.check_numerics(tf.cast(value_winner, tf.float32), "value_winner head contains NaN/Inf")
 
             metrics = [
                 policy_loss,
@@ -1469,10 +1512,21 @@ class TFProcess:
         grads, grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
 
         if self.cfg['training'].get('check_numerics', False):
-            tf.debugging.check_numerics(tf.cast(grad_norm, tf.float32), "grad_norm contains NaN/Inf")
-            for i, g in enumerate(grads):
+            # Check each gradient for NaN/Inf
+            # and also check the norm.
+            # TODO: Check weights as well?
+            for i, (g, w) in enumerate(zip(grads, self.model.trainable_weights)):
                 if g is not None:
-                    tf.debugging.check_numerics(tf.cast(g, tf.float32), f"Gradient {i} contains NaN/Inf")
+                    tf.debugging.check_numerics(
+                        tf.cast(g, tf.float32),
+                        f"Gradient {i} ({w.name}) contains NaN/Inf"
+                    )
+            # Also check norm
+            tf.debugging.check_numerics(
+                tf.cast(grad_norm, tf.float32),
+                "grad_norm contains NaN/Inf"
+            )
+
         self.optimizer.apply_gradients(zip(grads,
                                            self.model.trainable_weights),
                                        experimental_aggregate_gradients=False)
