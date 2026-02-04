@@ -8,8 +8,8 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input:
-    # - 'merged/'
-    - '../lczero-training/merged/'
+    - 'merged/'
+    # - '../lczero-training/merged/'
     # - 'training-run1--20210605-0516/'
     # - 'training-run1--20230415-1317/'
     # - 'training-run1--20230415-1417/'
@@ -34,6 +34,7 @@ dataset:
   # pc_max: 6
 training:
     check_numerics: true
+    # pb_source: "networks/cf-6m-adam/cf-6m-adam-swa-100000.pb.gz"
     precision: single # half
     swa: true
     swa_output: true

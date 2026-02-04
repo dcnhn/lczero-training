@@ -716,6 +716,8 @@ class TFProcess:
 
         restore_path = self.cfg['training'].get("pb_source", None)
         if restore_path is not None:
+            if tf.train.latest_checkpoint(os.path.dirname(restore_path)) is None:
+                raise FileNotFoundError(f"No TF checkpoint found in: {os.path.dirname(restore_path)}")
             self.replace_weights(restore_path, ignore_errors=False)
 
         self.active_lr = tf.Variable(0.000001, trainable=False)
