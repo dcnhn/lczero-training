@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-name: "cf-debug"
+name: "cf-6m-rmsprop-wRPE"
 gpu: "0,1,2"
 dataset:
   num_chunks: 500_000_000
@@ -8,13 +8,14 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input:
-    - 'merged/'
-  train_workers: 8
-  test_workers: 2
+    # - 'merged/'
+    # - 'training-run3-test75-20210924-0917/'
+    - 'training-run2-test91-20260128-1817/'
+  train_workers: 60
+  test_workers: 24
   fast_chunk_loading: true
   # pc_min: 0
   # pc_max: 6
-
 training:
     check_numerics: false
     precision: half # single/half
@@ -23,7 +24,7 @@ training:
     swa_max_n: 10
     swa_steps: 100
     max_grad_norm: 10.0
-    batch_size: 128
+    batch_size: 2048
     num_batch_splits: 1
     value_focus_min: 1.0
     value_focus_slope: 0.0
@@ -36,20 +37,24 @@ training:
     checkpoint_activations: false
 
     # validation_steps: 5000
-    num_test_positions: 512
-    train_avg_report_steps: 10
-    total_steps: 2_000
-    checkpoint_steps: 1_000
-    shuffle_size: 50_000
-    warmup_steps: 100
+    num_test_positions: 65_536 # num_evals = num_test_positions // (batch_size // num_batch_splits)
+    train_avg_report_steps: 1000
+    total_steps: 200_000
+    checkpoint_steps: 10_000
+    shuffle_size: 2_000_000
+    warmup_steps: 200
     mask_legal_moves: true
     lr_values:
         - 0.0005        # 5e-4
+        - 0.00025       # 2.5e-4
         - 0.000158      # 1.58e-4
+        - 0.0001        # 1.0e-4
         - 0.00005       # 5e-5
     lr_boundaries:
-        - 1_600_000
-        - 1_800_000
+        - 55_000
+        - 110_000
+        - 145_000
+        - 165_000
     loss_weights:
         policy: 1.0
         policy_optimistic_st: 0.0
@@ -69,7 +74,7 @@ training:
     path: 'networks'
 
     optimizer: rmsprop # sgd/nadam/rmsprop/adabelief/adam
-    beta_1: 0.9
+    beta_1: 0.9 
     beta_2: 0.999
     epsilon: 0.000001 # 1e-6 for better stability
     sparse: false
@@ -79,22 +84,22 @@ model:
     return_activations: false
 
     # Dimension parameters
-    embedding_size: 32
-    policy_embedding_size: 32
-    value_embedding_size: 8
-    moves_left_embedding_size: 8
-    encoder_layers: 1                   # number of intermediate attention layers in the policy head
-    encoder_heads: 4                    # number of attention heads in encoder layers, emb // (32 or 64) recommended
-                                        # with 64 memory is same as embedding, with 32 is double
-    encoder_d_model: 32                 # size of the Q, K, & V vectors in encoder layers -- divisible by encoder_heads
-    encoder_dff: 64                     # size of the expansion layer in encoder layer ffn
-    policy_d_model: 32                  # size of the query and key vectors in final attention layer
-    policy_d_aux: 32                    # size of the query and key vectors for auxiliary layers
-    dropout_rate: 0.0                   # the dropout rate used for weight regularization of attention during training
+    embedding_size: 256
+    policy_embedding_size: 256
+    value_embedding_size: 32
+    moves_left_embedding_size: 32
+    encoder_layers: 8                   # number of intermediate attention layers in the policy head
+    encoder_heads: 8                    # number of attention heads in encoder layers, emb // (32 or 64) recommended
+                                         # with 64 memory is same as embedding, with 32 is double
+    encoder_d_model: 256                 # size of the Q, K, & V vectors in encoder layers -- divisible by encoder_heads
+    encoder_dff: 256                    # size of the expansion layer in encoder layer ffn
+    policy_d_model: 256                  # size of the query and key vectors in final attention layer
+    policy_d_aux: 256                     # size of the query and key vectors for auxiliary layers
+    dropout_rate: 0.0                    # the dropout rate used for weight regularization of attention during training
                                         # makes memory 33 -> 39 GB on A100 as observed by Teck and Kovax
 
     embedding_style: "new" # new or old
-    embedding_dense_sz: 16
+    embedding_dense_sz: 32
 
     value: 'wdl'
     moves_left: 'v1'

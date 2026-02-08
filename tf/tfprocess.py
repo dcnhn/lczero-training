@@ -1733,14 +1733,18 @@ class TFProcess:
                     tf.saved_model.save(self.model, swa_path)
                     for (old, w) in zip(backup, self.model.weights):
                         w.assign(old)
-
-
+                
+                else:
+                    tf.saved_model.save(self.model, leela_path)
 
                 if not self.cfg["training"].get("disable_pb_checkpointing"):
                     
                     #self.save_leelaz_weights(leela_path)
                     if self.swa_enabled:
                         self.save_swa_weights(swa_path)
+
+                    else:
+                        self.save_leelaz_weights(leela_path)
 
         if self.profiling_start_step is not None and (
                 steps >= self.profiling_start_step +
