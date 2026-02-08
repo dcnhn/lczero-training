@@ -72,7 +72,6 @@ from select import select
 n_future_probs = 2
 n_future_boards = 16
 
-V6B_VERSION = struct.pack("i", 111)
 V7B_VERSION = struct.pack("i", 170)
 V7_VERSION = struct.pack("i", 7)
 V6_VERSION = struct.pack("i", 6)
@@ -86,9 +85,7 @@ V6_STRUCT_STRING  = "4si7432s832sBBBBBBBbfffffffffffffffIHHff"
 V5_STRUCT_STRING  = "4si7432s832sBBBBBBBbfffffff"
 V4_STRUCT_STRING  = "4s7432s832sBBBBBBBbffff"
 V3_STRUCT_STRING  = "4s7432s832sBBBBBBBb"
-V6B_STRUCT_STRING = V6_STRUCT_STRING + "7432s" * n_future_probs + str(12 * 8 * n_future_boards) + "s"
 
-v6b_struct = struct.Struct(V6B_STRUCT_STRING)
 v7b_struct = struct.Struct(V7B_STRUCT_STRING)
 v7_struct = struct.Struct(V7_STRUCT_STRING)
 v6_struct = struct.Struct(V6_STRUCT_STRING)
@@ -99,7 +96,6 @@ v3_struct = struct.Struct(V3_STRUCT_STRING)
 struct_sizes = {
     V7B_VERSION: v7b_struct.size,
     V7_VERSION: v7_struct.size,
-    V6B_VERSION: v6b_struct.size,
     V6_VERSION: v6_struct.size,
     V5_VERSION: v5_struct.size,
     V4_VERSION: v4_struct.size,
@@ -202,71 +198,69 @@ class ChunkParser:
     
 
 
-def convert_v6b_to_tuple(content):
+def convert_v7b_to_tuple(content):
     """
     Unpack a v6 binary record to 5-tuple (state, policy pi, result, q, m)
 
-    "4si7432s832sBBBBBBBbfffffffffffffffIHHff"
     v6 struct format is (8356 bytes total):
-    field   type     type string     name/description                                 size (bytes)       1st byte index
-    01      char     4s              version[4];                                      4                   0
-    02      int32_t  i               input_format;                                    4                   4
-    03      float    7432s           probabilities[1858];                             7432                8
-    04      uint64_t 832s            planes[104];                                     832                 7440
-    05      uint8_t  B               castling_us_ooo;                                 1                   8272
-    06      uint8_t  B               castling_us_oo;                                  1                   8273
-    07      uint8_t  B               castling_them_ooo;                               1                   8274
-    08      uint8_t  B               castling_them_oo;                                1                   8275
-    09      uint8_t  B               side_to_move_or_enpassant;                       1                   8276
-    10      uint8_t  B               rule50_count;                                    1                   8277
-                                     // Bitfield with the following allocation:
-                                     //  bit 7: side to move (input type 3)
-                                     //  bit 6: position marked for deletion by
-                                     //         the rescorer (never set by lc0)
-                                     //  bit 5: game adjudicated (v6)
-                                     //  bit 4: max game length exceeded (v6)
-                                     //  bit 3: best_q is for proven best move (v6)
-                                     //  bit 2: transpose transform (input type 3)
-                                     //  bit 1: mirror transform (input type 3)
-                                     //  bit 0: flip transform (input type 3)
-    11      uint8_t  B               invariance_info;                                 1                   8278
-    12      int8_t   b               dep_result;                                      1                   8279
-    13      float    f               root_q;                                          4                   8280
-    14      float    f               best_q;                                          4                   8284
-    15      float    f               root_d;                                          4                   8288
-    16      float    f               best_d;                                          4                   8292
-    17      float    f               root_m;      // In plies.                        4                   8296
-    18      float    f               best_m;      // In plies.                        4                   8300
-    19      float    f               plies_left;                                      4                   8304
-    20      float    f               result_q;                                        4                   8308
-    21      float    f               result_d;                                        4                   8312
-    22      float    f               played_q;                                        4                   8316
-    23      float    f               played_d;                                        4                   8320
-    24      float    f               played_m;                                        4                   8324
-        
+                                size         1st byte index
+    uint32_t version;                               0
+    uint32_t input_format;                          4
+    float probabilities[1858];  7432 bytes          8
+    uint64_t planes[104];        832 bytes       7440
+    uint8_t castling_us_ooo;                     8272
+    uint8_t castling_us_oo;                      8273
+    uint8_t castling_them_ooo;                   8274
+    uint8_t castling_them_oo;                    8275
+    uint8_t side_to_move_or_enpassant;           8276
+    uint8_t rule50_count;                        8277
+    // Bitfield with the following allocation:
+    //  bit 7: side to move (input type 3)
+    //  bit 6: position marked for deletion by the rescorer (never set by lc0)
+    //  bit 5: game adjudicated (v6)
+    //  bit 4: max game length exceeded (v6)
+    //  bit 3: best_q is for proven best move (v6)
+    //  bit 2: transpose transform (input type 3)
+    //  bit 1: mirror transform (input type 3)
+    //  bit 0: flip transform (input type 3)
+    uint8_t invariance_info;                     8278
+    uint8_t dep_result;                               8279
+    float root_q;                                8280
+    float best_q;                                8284
+    float root_d;                                8288
+    float best_d;                                8292
+    float root_m;      // In plies.              8296
+    float best_m;      // In plies.              8300
+    float plies_left;                            8304
+    float result_q;                              8308
+    float result_d;                              8312
+    float played_q;                              8316
+    float played_d;                              8320
+    float played_m;                              8324
     // The folowing may be NaN if not found in cache.
-    25      float    f               orig_q; // For value repair.                     4                   8328
-    26      float    f               orig_d;                                          4                   8332
-    27      float    f               orig_m;                                          4                   8336
-    28      uint32_t I               visits;                                          4                   8340
-                                     // Indices in the probabilities array.
-    29      uint16_t H               played_idx;                                      2                   8344
-    30      uint16_t H               best_idx;                                        2                   8346
-    31      float    f               pol_kld;                                         4                   8348
-    32      float    f               q_st;                                            4                   8352
-    33      float    7432s           opp_probs;                                       7432                8356
-    34      float    7432s           next_probs;                                      7432                15788
-    35      float    1536s           fut;                                             1536                23220
+    float orig_q;      // For value repair.      8328
+    float orig_d;                                8332
+    float orig_m;                                8336
+    uint32_t visits;                             8340
+    // Indices in the probabilities array.
+    uint16_t played_idx;                         8344
+    uint16_t best_idx;                           8346
+    float pol_kld;                               8348
+    float q_st;                                  8352
+    float d_st;                                  8356
+    uint16_t opp_played_idx;                     8360
+    uint16_t next_played_idx;                    8362
+    float extra[8]                               8364
+    ...                                          8396
     """
     # unpack the V6 content from raw byte array, arbitrarily chose 4 2-byte values
+    # for the 8 "reserved" bytes
     (ver, input_format, probs, planes, us_ooo, us_oo, them_ooo, them_oo,
         stm, rule50_count, invariance_info, dep_result, root_q, best_q,
         root_d, best_d, root_m, best_m, plies_left, result_q, result_d,
         played_q, played_d, played_m, orig_q, orig_d, orig_m, visits,
-        played_idx, best_idx, pol_kld, st_q, opp_probs, next_probs, fut) = v6b_struct.unpack(content)
-    
-    # Draw probability not given in the training data (V6). Set to zero
-    st_d = 0.0
+        played_idx, best_idx, pol_kld, st_q, st_d, opp_played_idx, next_played_idx,
+        f1, f2, f3, f4, f5, f6, f7, f8, opp_probs, next_probs, fut) = v7b_struct.unpack(content)
     """
     v5 struct format was (8308 bytes total)
         int32 version (4 bytes)
@@ -383,6 +377,7 @@ def convert_v6b_to_tuple(content):
         np.float32)
 
     return (planes, probs, winner, root_wdl, plies_left, st_wdl, opp_probs, next_probs, fut)
+
 
 class ChunkParserInner:
     def __init__(self, parent, chunks, expected_input_format, shuffle_size,
@@ -609,7 +604,7 @@ class ChunkParserInner:
         Read v7 records from child workers, shuffle, and yield
         records.
         """
-        sbuff = sb.ShuffleBuffer(v6b_struct.size, self.shuffle_size)
+        sbuff = sb.ShuffleBuffer(v7b_struct.size, self.shuffle_size)
         while len(self.readers):
             for r in self.readers:
                 try:
@@ -634,7 +629,7 @@ class ChunkParserInner:
         applying a random symmetry on the way.
         """
         for r in gen:
-            yield convert_v6b_to_tuple(r)
+            yield convert_v7b_to_tuple(r)
 
     def batch_gen(self, gen, allow_partial=True):
         """
