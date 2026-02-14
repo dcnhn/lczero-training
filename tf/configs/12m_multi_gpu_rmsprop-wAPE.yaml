@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 name: "cf-12m-rmsprop-wAPE"
-gpu: "0,1,2"
+gpu: "0,1,2" # CPU:"none"; 0 single GPU; "0,1,2,3" multiple GPUs; "all" all available GPUs
 dataset:
   num_chunks: 500_000_000
   allow_less_chunks: true
