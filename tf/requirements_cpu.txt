@@ -1,0 +1,9 @@
+tensorflow==2.15.0.post1
+numpy
+protobuf==3.20.3
+pyyaml
+rich
+tf-models-official
+tensorflow-addons
+aiohttp
+aiofiles

@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 name: "cf-debug"
-gpu: "0,1,2"
+gpu: 0 # CPU:"none" or "cpu"; 0 single GPU; "0,1,2,3" multiple GPUs; "all" all available GPUs
 dataset:
   num_chunks: 500_000_000
   allow_less_chunks: true
@@ -9,7 +9,7 @@ dataset:
   sort_type: name
   input:
     - 'playground_data/'
-  train_workers: 8
+  train_workers: 10
   test_workers: 2
   fast_chunk_loading: true
   # pc_min: 0
@@ -21,7 +21,7 @@ training:
     swa: true
     swa_output: true
     swa_max_n: 10
-    swa_steps: 100
+    swa_steps: 1000
     max_grad_norm: 10.0
     batch_size: 32
     num_batch_splits: 1
@@ -38,8 +38,8 @@ training:
     # validation_steps: 5000
     num_test_positions: 512
     train_avg_report_steps: 10
-    total_steps: 5_000
-    checkpoint_steps: 1_00
+    total_steps: 2_000
+    checkpoint_steps: 1_000
     shuffle_size: 50_000
     warmup_steps: 100
     mask_legal_moves: true
