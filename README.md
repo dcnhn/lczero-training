@@ -1,3 +1,80 @@
+# Introduction
+
+This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
+
+The project adapts the original Leela Chess Zero training pipeline to support transformer-based architectures. It is intended as a research-oriented codebase for exploring training dynamics, architectural choices, and reproducibility rather than as a polished end-user application.
+
+
+# Setup
+
+
+## Prerequisites
+- This repository is designed to run on **Linux**.
+- If you are working on **Windows**, you must have **Windows Subsystem for Linux (WSL)** installed and configured.
+- A working **conda** or **mamba** installation (e.g. Miniconda or Mambaforge).
+- **For training with GPU:** An NVIDIA GPU with a compatible NVIDIA driver installed.
+  - Must support **CUDA ≥ 12.2**
+- All scripts/commands assume your terminal is opened at the **root directory of this repository**
+- The Protocol Buffers compiler (`protoc`) must be installed:
+  ```bash
+  sudo apt update
+  sudo apt install -y protobuf-compiler
+
+### Why Protocol Buffers Compilation Is Required
+
+The `.proto` files located in `libs/lczero-common/proto/` (`chunk.proto` and `net.proto`) define message schemas-structured templates that specify how data is organized and serialized for communication (see the [Protocol Buffers documentation](https://protobuf.dev/overview/))
+
+These schemas are not directly usable by Python. They must first be compiled into Python modules using `protoc`. The generated Python files provide:
+
+- **Typed message classes**
+- **Efficient binary serialization and deserialization**
+- **A single, well-defined structure for exchanging data between components**
+
+Without compiling these `.proto` files, the corresponding Python imports will fail and any code relying on these message definitions will not run.
+
+**Note:**
+The repository **already** includes pre-compiled Python files in `tf/proto/`. If you modify any `.proto` files, you must run `init.sh` to regenerate the corresponding Python files in `tf/proto/` so that the changes are reflected in the Python code.
+
+
+## Setup of Conda Environment and Repository
+
+Create a new conda environment with the required Python version:
+
+```bash
+conda create --name <ENV_NAME> python=3.10
+conda activate <ENV_NAME>
+```
+
+Once the environment is activated, clone the repository and navigate into its root directory:
+```bash
+git clone https://github.com/dcnhn/lczero-training.git
+cd lczero-training
+```
+
+After cloning, install the Python dependencies.
+For a system with **NVIDIA GPU**:
+```bash
+pip install -r ./tf/requirements.txt
+```
+Otherwise:
+```bash
+pip install -r ./tf/requirements_cpu.txt
+```
+
+## Verify Environment Setup
+Run the following script to verify that the environment is correctly configured:
+```bash
+python tf/train.py --cfg tf/configs/debug.yaml  --output ./tmp/debug.txt
+```
+This command runs a small-scale debug training to validate that all dependencies, configurations, and runtime components are working correctly.
+
+A successful run should complete without errors and produce output similar to the following:
+![Successful debug training run](doc/finished_debug_train.png)
+
+
+
+> All setup commands assume your terminal is opened at the **root directory of this repository**
+
 # Quickstart
 
 ## Installation
