@@ -9,8 +9,7 @@ dataset:
   sort_type: name
   input:
     # - 'merged/'
-    # - 'training-run3-test75-20210924-0917/'
-    - 'training-run2-test91-20260128-1817/'
+    - 'training-run3-test75-20210924-0917/'
   train_workers: 60
   test_workers: 24
   fast_chunk_loading: true

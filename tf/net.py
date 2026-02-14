@@ -257,6 +257,8 @@ class Net:
                 s = 'dense'
             elif l.startswith('w'):
                 s = l[1]
+            elif l == 'abs_pe':
+                return l
                 
 
             else:

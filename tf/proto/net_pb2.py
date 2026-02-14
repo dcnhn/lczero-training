@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0fproto/net.proto\x12\x08pblczero\"<\n\rEngineVersion\x12\r\n\x05major\x18\x01 \x01(\r\x12\r\n\x05minor\x18\x02 \x01(\r\x12\r\n\x05patch\x18\x03 \x01(\r\"\xbc/\n\x07Weights\x12*\n\x05input\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12,\n\x08residual\x18\x02 \x03(\x0b\x32\x1a.pblczero.Weights.Residual\x12\x31\n\x10ip_emb_preproc_w\x18% \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x10ip_emb_preproc_b\x18& \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_emb_w\x18\x19 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_emb_b\x18\x1a \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x10ip_emb_ln_gammas\x18\' \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x30\n\x0fip_emb_ln_betas\x18( \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_mult_gate\x18! \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12,\n\x0bip_add_gate\x18\" \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\nip_emb_ffn\x18) \x01(\x0b\x32\x15.pblczero.Weights.FFN\x12\x35\n\x14ip_emb_ffn_ln_gammas\x18* \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x34\n\x13ip_emb_ffn_ln_betas\x18+ \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12/\n\x07\x65ncoder\x18\x1b \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x11\n\theadcount\x18\x1c \x01(\r\x12\x33\n\x0bpol_encoder\x18\x15 \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x15\n\rpol_headcount\x18\x18 \x01(\r\x12,\n\x07policy1\x18\x0b \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12+\n\x06policy\x18\x03 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_pol_w\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_w\x18\x11 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_b\x18\x12 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_w\x18\x13 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_b\x18\x14 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip4_pol_w\x18\x16 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\x05value\x18\x06 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_val_w\x18\x1d \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_val_b\x18\x1e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_w\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_b\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x0bvalue_heads\x18, \x01(\x0b\x32\x1c.pblczero.Weights.ValueHeads\x12\x33\n\x0cpolicy_heads\x18- \x01(\x0b\x32\x1d.pblczero.Weights.PolicyHeads\x12\x31\n\x0b\x66uture_head\x18. \x01(\x0b\x32\x1c.pblczero.Weights.FutureHead\x12/\n\nmoves_left\x18\x0c \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_mov_w\x18\x1f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_mov_b\x18  \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_mov_w\x18\r \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_mov_b\x18\x0e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_mov_w\x18\x0f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_mov_b\x18\x10 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tsmolgen_w\x18# \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tsmolgen_b\x18$ \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x39\n\x05Layer\x12\x0f\n\x07min_val\x18\x01 \x01(\x02\x12\x0f\n\x07max_val\x18\x02 \x01(\x02\x12\x0e\n\x06params\x18\x03 \x01(\x0c\x1a\xfd\x02\n\tConvBlock\x12(\n\x07weights\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\'\n\x06\x62iases\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x62n_means\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nbn_stddivs\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tbn_gammas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x62n_betas\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x35\n\x14input_quantize_scale\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x37\n\x16weights_quantize_scale\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x9c\x01\n\x06SEunit\x12#\n\x02w1\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02\x62\x31\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02w2\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02\x62\x32\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x88\x01\n\x08Residual\x12*\n\x05\x63onv1\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12*\n\x05\x63onv2\x18\x02 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12$\n\x02se\x18\x03 \x01(\x0b\x32\x18.pblczero.Weights.SEunit\x1a\x92\x03\n\x07Smolgen\x12)\n\x08\x63ompress\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_w\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_b\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nln1_gammas\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln1_betas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_w\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_b\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nln2_gammas\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln2_betas\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xc7\x05\n\x03MHA\x12$\n\x03q_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03q_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\x07smolgen\x18\t \x01(\x0b\x32\x19.pblczero.Weights.Smolgen\x12&\n\x05rpe_q\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12&\n\x05rpe_k\x18\x0b \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12&\n\x05rpe_v\x18\x0c \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s1\x18\r \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03q_s\x18\x0e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_s\x18\x0f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_s\x18\x10 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s2\x18\x11 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_s\x18\x12 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xd1\x02\n\x03\x46\x46N\x12)\n\x08\x64\x65nse1_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s1\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_s\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s2\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_s\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x88\x02\n\x0c\x45ncoderLayer\x12\"\n\x03mha\x18\x01 \x01(\x0b\x32\x15.pblczero.Weights.MHA\x12+\n\nln1_gammas\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln1_betas\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\"\n\x03\x66\x66n\x18\x04 \x01(\x0b\x32\x15.pblczero.Weights.FFN\x12+\n\nln2_gammas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln2_betas\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xe5\x03\n\nPolicyHead\x12,\n\x07policy1\x18\x64 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12+\n\x06policy\x18\x65 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12\x33\n\x0bpol_encoder\x18\x66 \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x15\n\rpol_headcount\x18g \x01(\r\x12)\n\x08ip_pol_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip4_pol_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x62\n\nFutureHead\x12)\n\x08ip_fut_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_fut_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xf9\x03\n\tValueHead\x12*\n\x05value\x18\x64 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_val_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_val_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_err_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_err_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_cat_w\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_cat_b\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xcf\x02\n\x0bPolicyHeads\x12)\n\x08ip_pol_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x07vanilla\x18\x03 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12\x33\n\roptimistic_st\x18\x04 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12*\n\x04soft\x18\x05 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12.\n\x08opponent\x18\x06 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12*\n\x04next\x18\x07 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x1a\x8a\x01\n\nValueHeads\x12+\n\x06winner\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\x12&\n\x01q\x18\x02 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\x12\'\n\x02st\x18\x03 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\"\x8c\x01\n\x0eTrainingParams\x12\x16\n\x0etraining_steps\x18\x01 \x01(\r\x12\x15\n\rlearning_rate\x18\x02 \x01(\x02\x12\x10\n\x08mse_loss\x18\x03 \x01(\x02\x12\x13\n\x0bpolicy_loss\x18\x04 \x01(\x02\x12\x10\n\x08\x61\x63\x63uracy\x18\x05 \x01(\x02\x12\x12\n\nlc0_params\x18\x06 \x01(\t\"\x94\x10\n\rNetworkFormat\x12\x32\n\x05input\x18\x01 \x01(\x0e\x32#.pblczero.NetworkFormat.InputFormat\x12\x34\n\x06output\x18\x02 \x01(\x0e\x32$.pblczero.NetworkFormat.OutputFormat\x12\x39\n\x07network\x18\x03 \x01(\x0e\x32(.pblczero.NetworkFormat.NetworkStructure\x12\x34\n\x06policy\x18\x04 \x01(\x0e\x32$.pblczero.NetworkFormat.PolicyFormat\x12\x32\n\x05value\x18\x05 \x01(\x0e\x32#.pblczero.NetworkFormat.ValueFormat\x12;\n\nmoves_left\x18\x06 \x01(\x0e\x32\'.pblczero.NetworkFormat.MovesLeftFormat\x12\x45\n\x12\x64\x65\x66\x61ult_activation\x18\x07 \x01(\x0e\x32).pblczero.NetworkFormat.DefaultActivation\x12\x46\n\x12smolgen_activation\x18\x08 \x01(\x0e\x32*.pblczero.NetworkFormat.ActivationFunction\x12\x42\n\x0e\x66\x66n_activation\x18\t \x01(\x0e\x32*.pblczero.NetworkFormat.ActivationFunction\x12\x45\n\x0finput_embedding\x18\n \x01(\x0e\x32,.pblczero.NetworkFormat.InputEmbeddingFormat\"\xcf\x02\n\x0bInputFormat\x12\x11\n\rINPUT_UNKNOWN\x10\x00\x12\x1d\n\x19INPUT_CLASSICAL_112_PLANE\x10\x01\x12!\n\x1dINPUT_112_WITH_CASTLING_PLANE\x10\x02\x12#\n\x1fINPUT_112_WITH_CANONICALIZATION\x10\x03\x12.\n*INPUT_112_WITH_CANONICALIZATION_HECTOPLIES\x10\x04\x12:\n5INPUT_112_WITH_CANONICALIZATION_HECTOPLIES_ARMAGEDDON\x10\x84\x01\x12&\n\"INPUT_112_WITH_CANONICALIZATION_V2\x10\x05\x12\x32\n-INPUT_112_WITH_CANONICALIZATION_V2_ARMAGEDDON\x10\x85\x01\"H\n\x0cOutputFormat\x12\x12\n\x0eOUTPUT_UNKNOWN\x10\x00\x12\x14\n\x10OUTPUT_CLASSICAL\x10\x01\x12\x0e\n\nOUTPUT_WDL\x10\x02\"\xd6\x02\n\x10NetworkStructure\x12\x13\n\x0fNETWORK_UNKNOWN\x10\x00\x12\x15\n\x11NETWORK_CLASSICAL\x10\x01\x12\x0e\n\nNETWORK_SE\x10\x02\x12%\n!NETWORK_CLASSICAL_WITH_HEADFORMAT\x10\x03\x12\x1e\n\x1aNETWORK_SE_WITH_HEADFORMAT\x10\x04\x12\x10\n\x0cNETWORK_ONNX\x10\x05\x12)\n%NETWORK_ATTENTIONBODY_WITH_HEADFORMAT\x10\x06\x12+\n&NETWORK_CLASSICAL_WITH_MULTIHEADFORMAT\x10\x83\x01\x12$\n\x1fNETWORK_SE_WITH_MULTIHEADFORMAT\x10\x84\x01\x12/\n*NETWORK_ATTENTIONBODY_WITH_MULTIHEADFORMAT\x10\x86\x01\"f\n\x0cPolicyFormat\x12\x12\n\x0ePOLICY_UNKNOWN\x10\x00\x12\x14\n\x10POLICY_CLASSICAL\x10\x01\x12\x16\n\x12POLICY_CONVOLUTION\x10\x02\x12\x14\n\x10POLICY_ATTENTION\x10\x03\"U\n\x0bValueFormat\x12\x11\n\rVALUE_UNKNOWN\x10\x00\x12\x13\n\x0fVALUE_CLASSICAL\x10\x01\x12\r\n\tVALUE_WDL\x10\x02\x12\x0f\n\x0bVALUE_PARAM\x10\x03\"9\n\x0fMovesLeftFormat\x12\x13\n\x0fMOVES_LEFT_NONE\x10\x00\x12\x11\n\rMOVES_LEFT_V1\x10\x01\"\xf2\x01\n\x12\x41\x63tivationFunction\x12\x16\n\x12\x41\x43TIVATION_DEFAULT\x10\x00\x12\x13\n\x0f\x41\x43TIVATION_MISH\x10\x01\x12\x13\n\x0f\x41\x43TIVATION_RELU\x10\x02\x12\x13\n\x0f\x41\x43TIVATION_NONE\x10\x03\x12\x13\n\x0f\x41\x43TIVATION_TANH\x10\x04\x12\x16\n\x12\x41\x43TIVATION_SIGMOID\x10\x05\x12\x13\n\x0f\x41\x43TIVATION_SELU\x10\x06\x12\x14\n\x10\x41\x43TIVATION_SWISH\x10\x07\x12\x15\n\x11\x41\x43TIVATION_RELU_2\x10\x08\x12\x16\n\x12\x41\x43TIVATION_SOFTMAX\x10\t\"M\n\x11\x44\x65\x66\x61ultActivation\x12\x1b\n\x17\x44\x45\x46\x41ULT_ACTIVATION_RELU\x10\x00\x12\x1b\n\x17\x44\x45\x46\x41ULT_ACTIVATION_MISH\x10\x01\"j\n\x14InputEmbeddingFormat\x12\x18\n\x14INPUT_EMBEDDING_NONE\x10\x00\x12\x1a\n\x16INPUT_EMBEDDING_PE_MAP\x10\x01\x12\x1c\n\x18INPUT_EMBEDDING_PE_DENSE\x10\x02\"\x95\x01\n\x06\x46ormat\x12\x33\n\x10weights_encoding\x18\x01 \x01(\x0e\x32\x19.pblczero.Format.Encoding\x12/\n\x0enetwork_format\x18\x02 \x01(\x0b\x32\x17.pblczero.NetworkFormat\"%\n\x08\x45ncoding\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08LINEAR16\x10\x01\"\xfe\x01\n\tOnnxModel\x12\r\n\x05model\x18\x01 \x01(\x0c\x12/\n\tdata_type\x18\x02 \x01(\x0e\x32\x1c.pblczero.OnnxModel.DataType\x12\x14\n\x0cinput_planes\x18\x03 \x01(\t\x12\x14\n\x0coutput_value\x18\x04 \x01(\t\x12\x12\n\noutput_wdl\x18\x05 \x01(\t\x12\x15\n\routput_policy\x18\x06 \x01(\t\x12\x12\n\noutput_mlh\x18\x07 \x01(\t\"F\n\x08\x44\x61taType\x12\x14\n\x10UNKNOWN_DATATYPE\x10\x00\x12\t\n\x05\x46LOAT\x10\x01\x12\x0b\n\x07\x46LOAT16\x10\n\x12\x0c\n\x08\x42\x46LOAT16\x10\x10\"\xf5\x01\n\x03Net\x12\r\n\x05magic\x18\x01 \x01(\x07\x12\x0f\n\x07license\x18\x02 \x01(\t\x12,\n\x0bmin_version\x18\x03 \x01(\x0b\x32\x17.pblczero.EngineVersion\x12 \n\x06\x66ormat\x18\x04 \x01(\x0b\x32\x10.pblczero.Format\x12\x31\n\x0ftraining_params\x18\x05 \x01(\x0b\x32\x18.pblczero.TrainingParams\x12\"\n\x07weights\x18\n \x01(\x0b\x32\x11.pblczero.Weights\x12\'\n\nonnx_model\x18\x0b \x01(\x0b\x32\x13.pblczero.OnnxModel'
+  serialized_pb=b'\n\x0fproto/net.proto\x12\x08pblczero\"<\n\rEngineVersion\x12\r\n\x05major\x18\x01 \x01(\r\x12\r\n\x05minor\x18\x02 \x01(\r\x12\r\n\x05patch\x18\x03 \x01(\r\"\xe5/\n\x07Weights\x12*\n\x05input\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12,\n\x08residual\x18\x02 \x03(\x0b\x32\x1a.pblczero.Weights.Residual\x12\x31\n\x10ip_emb_preproc_w\x18% \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x10ip_emb_preproc_b\x18& \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_emb_w\x18\x19 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_emb_b\x18\x1a \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x10ip_emb_ln_gammas\x18\' \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x30\n\x0fip_emb_ln_betas\x18( \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_mult_gate\x18! \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12,\n\x0bip_add_gate\x18\" \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\nip_emb_ffn\x18) \x01(\x0b\x32\x15.pblczero.Weights.FFN\x12\x35\n\x14ip_emb_ffn_ln_gammas\x18* \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x34\n\x13ip_emb_ffn_ln_betas\x18+ \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12/\n\x07\x65ncoder\x18\x1b \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x11\n\theadcount\x18\x1c \x01(\r\x12\x33\n\x0bpol_encoder\x18\x15 \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x15\n\rpol_headcount\x18\x18 \x01(\r\x12,\n\x07policy1\x18\x0b \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12+\n\x06policy\x18\x03 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_pol_w\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_w\x18\x11 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_b\x18\x12 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_w\x18\x13 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_b\x18\x14 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip4_pol_w\x18\x16 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\x05value\x18\x06 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_val_w\x18\x1d \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_val_b\x18\x1e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_w\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_b\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x31\n\x0bvalue_heads\x18, \x01(\x0b\x32\x1c.pblczero.Weights.ValueHeads\x12\x33\n\x0cpolicy_heads\x18- \x01(\x0b\x32\x1d.pblczero.Weights.PolicyHeads\x12\x31\n\x0b\x66uture_head\x18. \x01(\x0b\x32\x1c.pblczero.Weights.FutureHead\x12/\n\nmoves_left\x18\x0c \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_mov_w\x18\x1f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_mov_b\x18  \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_mov_w\x18\r \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_mov_b\x18\x0e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_mov_w\x18\x0f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_mov_b\x18\x10 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tsmolgen_w\x18# \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tsmolgen_b\x18$ \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x39\n\x05Layer\x12\x0f\n\x07min_val\x18\x01 \x01(\x02\x12\x0f\n\x07max_val\x18\x02 \x01(\x02\x12\x0e\n\x06params\x18\x03 \x01(\x0c\x1a\xfd\x02\n\tConvBlock\x12(\n\x07weights\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\'\n\x06\x62iases\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x62n_means\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nbn_stddivs\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tbn_gammas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x62n_betas\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x35\n\x14input_quantize_scale\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\x37\n\x16weights_quantize_scale\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x9c\x01\n\x06SEunit\x12#\n\x02w1\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02\x62\x31\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02w2\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02\x62\x32\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x88\x01\n\x08Residual\x12*\n\x05\x63onv1\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12*\n\x05\x63onv2\x18\x02 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12$\n\x02se\x18\x03 \x01(\x0b\x32\x18.pblczero.Weights.SEunit\x1a\x92\x03\n\x07Smolgen\x12)\n\x08\x63ompress\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_w\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_b\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nln1_gammas\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln1_betas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_w\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_b\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12+\n\nln2_gammas\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln2_betas\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xf0\x05\n\x03MHA\x12$\n\x03q_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03q_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\x07smolgen\x18\t \x01(\x0b\x32\x19.pblczero.Weights.Smolgen\x12&\n\x05rpe_q\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12&\n\x05rpe_k\x18\x0b \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12&\n\x05rpe_v\x18\x0c \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s1\x18\r \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03q_s\x18\x0e \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03k_s\x18\x0f \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12$\n\x03v_s\x18\x10 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s2\x18\x11 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12(\n\x07\x64\x65nse_s\x18\x12 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\'\n\x06\x61\x62s_pe\x18\x13 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xd1\x02\n\x03\x46\x46N\x12)\n\x08\x64\x65nse1_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s1\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse1_s\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12#\n\x02s2\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08\x64\x65nse2_s\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x88\x02\n\x0c\x45ncoderLayer\x12\"\n\x03mha\x18\x01 \x01(\x0b\x32\x15.pblczero.Weights.MHA\x12+\n\nln1_gammas\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln1_betas\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12\"\n\x03\x66\x66n\x18\x04 \x01(\x0b\x32\x15.pblczero.Weights.FFN\x12+\n\nln2_gammas\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tln2_betas\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xe5\x03\n\nPolicyHead\x12,\n\x07policy1\x18\x64 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12+\n\x06policy\x18\x65 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12\x33\n\x0bpol_encoder\x18\x66 \x03(\x0b\x32\x1e.pblczero.Weights.EncoderLayer\x12\x15\n\rpol_headcount\x18g \x01(\r\x12)\n\x08ip_pol_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_pol_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip3_pol_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip4_pol_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\x62\n\nFutureHead\x12)\n\x08ip_fut_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_fut_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xf9\x03\n\tValueHead\x12*\n\x05value\x18\x64 \x01(\x0b\x32\x1b.pblczero.Weights.ConvBlock\x12)\n\x08ip_val_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_val_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_w\x18\x03 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip1_val_b\x18\x04 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_w\x18\x05 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12*\n\tip2_val_b\x18\x06 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_err_w\x18\x07 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_err_b\x18\x08 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_cat_w\x18\t \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x0cip_val_cat_b\x18\n \x01(\x0b\x32\x17.pblczero.Weights.Layer\x1a\xcf\x02\n\x0bPolicyHeads\x12)\n\x08ip_pol_w\x18\x01 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12)\n\x08ip_pol_b\x18\x02 \x01(\x0b\x32\x17.pblczero.Weights.Layer\x12-\n\x07vanilla\x18\x03 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12\x33\n\roptimistic_st\x18\x04 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12*\n\x04soft\x18\x05 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12.\n\x08opponent\x18\x06 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x12*\n\x04next\x18\x07 \x01(\x0b\x32\x1c.pblczero.Weights.PolicyHead\x1a\x8a\x01\n\nValueHeads\x12+\n\x06winner\x18\x01 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\x12&\n\x01q\x18\x02 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\x12\'\n\x02st\x18\x03 \x01(\x0b\x32\x1b.pblczero.Weights.ValueHead\"\x8c\x01\n\x0eTrainingParams\x12\x16\n\x0etraining_steps\x18\x01 \x01(\r\x12\x15\n\rlearning_rate\x18\x02 \x01(\x02\x12\x10\n\x08mse_loss\x18\x03 \x01(\x02\x12\x13\n\x0bpolicy_loss\x18\x04 \x01(\x02\x12\x10\n\x08\x61\x63\x63uracy\x18\x05 \x01(\x02\x12\x12\n\nlc0_params\x18\x06 \x01(\t\"\x94\x10\n\rNetworkFormat\x12\x32\n\x05input\x18\x01 \x01(\x0e\x32#.pblczero.NetworkFormat.InputFormat\x12\x34\n\x06output\x18\x02 \x01(\x0e\x32$.pblczero.NetworkFormat.OutputFormat\x12\x39\n\x07network\x18\x03 \x01(\x0e\x32(.pblczero.NetworkFormat.NetworkStructure\x12\x34\n\x06policy\x18\x04 \x01(\x0e\x32$.pblczero.NetworkFormat.PolicyFormat\x12\x32\n\x05value\x18\x05 \x01(\x0e\x32#.pblczero.NetworkFormat.ValueFormat\x12;\n\nmoves_left\x18\x06 \x01(\x0e\x32\'.pblczero.NetworkFormat.MovesLeftFormat\x12\x45\n\x12\x64\x65\x66\x61ult_activation\x18\x07 \x01(\x0e\x32).pblczero.NetworkFormat.DefaultActivation\x12\x46\n\x12smolgen_activation\x18\x08 \x01(\x0e\x32*.pblczero.NetworkFormat.ActivationFunction\x12\x42\n\x0e\x66\x66n_activation\x18\t \x01(\x0e\x32*.pblczero.NetworkFormat.ActivationFunction\x12\x45\n\x0finput_embedding\x18\n \x01(\x0e\x32,.pblczero.NetworkFormat.InputEmbeddingFormat\"\xcf\x02\n\x0bInputFormat\x12\x11\n\rINPUT_UNKNOWN\x10\x00\x12\x1d\n\x19INPUT_CLASSICAL_112_PLANE\x10\x01\x12!\n\x1dINPUT_112_WITH_CASTLING_PLANE\x10\x02\x12#\n\x1fINPUT_112_WITH_CANONICALIZATION\x10\x03\x12.\n*INPUT_112_WITH_CANONICALIZATION_HECTOPLIES\x10\x04\x12:\n5INPUT_112_WITH_CANONICALIZATION_HECTOPLIES_ARMAGEDDON\x10\x84\x01\x12&\n\"INPUT_112_WITH_CANONICALIZATION_V2\x10\x05\x12\x32\n-INPUT_112_WITH_CANONICALIZATION_V2_ARMAGEDDON\x10\x85\x01\"H\n\x0cOutputFormat\x12\x12\n\x0eOUTPUT_UNKNOWN\x10\x00\x12\x14\n\x10OUTPUT_CLASSICAL\x10\x01\x12\x0e\n\nOUTPUT_WDL\x10\x02\"\xd6\x02\n\x10NetworkStructure\x12\x13\n\x0fNETWORK_UNKNOWN\x10\x00\x12\x15\n\x11NETWORK_CLASSICAL\x10\x01\x12\x0e\n\nNETWORK_SE\x10\x02\x12%\n!NETWORK_CLASSICAL_WITH_HEADFORMAT\x10\x03\x12\x1e\n\x1aNETWORK_SE_WITH_HEADFORMAT\x10\x04\x12\x10\n\x0cNETWORK_ONNX\x10\x05\x12)\n%NETWORK_ATTENTIONBODY_WITH_HEADFORMAT\x10\x06\x12+\n&NETWORK_CLASSICAL_WITH_MULTIHEADFORMAT\x10\x83\x01\x12$\n\x1fNETWORK_SE_WITH_MULTIHEADFORMAT\x10\x84\x01\x12/\n*NETWORK_ATTENTIONBODY_WITH_MULTIHEADFORMAT\x10\x86\x01\"f\n\x0cPolicyFormat\x12\x12\n\x0ePOLICY_UNKNOWN\x10\x00\x12\x14\n\x10POLICY_CLASSICAL\x10\x01\x12\x16\n\x12POLICY_CONVOLUTION\x10\x02\x12\x14\n\x10POLICY_ATTENTION\x10\x03\"U\n\x0bValueFormat\x12\x11\n\rVALUE_UNKNOWN\x10\x00\x12\x13\n\x0fVALUE_CLASSICAL\x10\x01\x12\r\n\tVALUE_WDL\x10\x02\x12\x0f\n\x0bVALUE_PARAM\x10\x03\"9\n\x0fMovesLeftFormat\x12\x13\n\x0fMOVES_LEFT_NONE\x10\x00\x12\x11\n\rMOVES_LEFT_V1\x10\x01\"\xf2\x01\n\x12\x41\x63tivationFunction\x12\x16\n\x12\x41\x43TIVATION_DEFAULT\x10\x00\x12\x13\n\x0f\x41\x43TIVATION_MISH\x10\x01\x12\x13\n\x0f\x41\x43TIVATION_RELU\x10\x02\x12\x13\n\x0f\x41\x43TIVATION_NONE\x10\x03\x12\x13\n\x0f\x41\x43TIVATION_TANH\x10\x04\x12\x16\n\x12\x41\x43TIVATION_SIGMOID\x10\x05\x12\x13\n\x0f\x41\x43TIVATION_SELU\x10\x06\x12\x14\n\x10\x41\x43TIVATION_SWISH\x10\x07\x12\x15\n\x11\x41\x43TIVATION_RELU_2\x10\x08\x12\x16\n\x12\x41\x43TIVATION_SOFTMAX\x10\t\"M\n\x11\x44\x65\x66\x61ultActivation\x12\x1b\n\x17\x44\x45\x46\x41ULT_ACTIVATION_RELU\x10\x00\x12\x1b\n\x17\x44\x45\x46\x41ULT_ACTIVATION_MISH\x10\x01\"j\n\x14InputEmbeddingFormat\x12\x18\n\x14INPUT_EMBEDDING_NONE\x10\x00\x12\x1a\n\x16INPUT_EMBEDDING_PE_MAP\x10\x01\x12\x1c\n\x18INPUT_EMBEDDING_PE_DENSE\x10\x02\"\x95\x01\n\x06\x46ormat\x12\x33\n\x10weights_encoding\x18\x01 \x01(\x0e\x32\x19.pblczero.Format.Encoding\x12/\n\x0enetwork_format\x18\x02 \x01(\x0b\x32\x17.pblczero.NetworkFormat\"%\n\x08\x45ncoding\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08LINEAR16\x10\x01\"\xfe\x01\n\tOnnxModel\x12\r\n\x05model\x18\x01 \x01(\x0c\x12/\n\tdata_type\x18\x02 \x01(\x0e\x32\x1c.pblczero.OnnxModel.DataType\x12\x14\n\x0cinput_planes\x18\x03 \x01(\t\x12\x14\n\x0coutput_value\x18\x04 \x01(\t\x12\x12\n\noutput_wdl\x18\x05 \x01(\t\x12\x15\n\routput_policy\x18\x06 \x01(\t\x12\x12\n\noutput_mlh\x18\x07 \x01(\t\"F\n\x08\x44\x61taType\x12\x14\n\x10UNKNOWN_DATATYPE\x10\x00\x12\t\n\x05\x46LOAT\x10\x01\x12\x0b\n\x07\x46LOAT16\x10\n\x12\x0c\n\x08\x42\x46LOAT16\x10\x10\"\xf5\x01\n\x03Net\x12\r\n\x05magic\x18\x01 \x01(\x07\x12\x0f\n\x07license\x18\x02 \x01(\t\x12,\n\x0bmin_version\x18\x03 \x01(\x0b\x32\x17.pblczero.EngineVersion\x12 \n\x06\x66ormat\x18\x04 \x01(\x0b\x32\x10.pblczero.Format\x12\x31\n\x0ftraining_params\x18\x05 \x01(\x0b\x32\x18.pblczero.TrainingParams\x12\"\n\x07weights\x18\n \x01(\x0b\x32\x11.pblczero.Weights\x12\'\n\nonnx_model\x18\x0b \x01(\x0b\x32\x13.pblczero.OnnxModel'
 )
 
 
@@ -74,8 +74,8 @@ _NETWORKFORMAT_INPUTFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=6946,
-  serialized_end=7281,
+  serialized_start=6987,
+  serialized_end=7322,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_INPUTFORMAT)
 
@@ -104,8 +104,8 @@ _NETWORKFORMAT_OUTPUTFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7283,
-  serialized_end=7355,
+  serialized_start=7324,
+  serialized_end=7396,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_OUTPUTFORMAT)
 
@@ -169,8 +169,8 @@ _NETWORKFORMAT_NETWORKSTRUCTURE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7358,
-  serialized_end=7700,
+  serialized_start=7399,
+  serialized_end=7741,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_NETWORKSTRUCTURE)
 
@@ -204,8 +204,8 @@ _NETWORKFORMAT_POLICYFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7702,
-  serialized_end=7804,
+  serialized_start=7743,
+  serialized_end=7845,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_POLICYFORMAT)
 
@@ -239,8 +239,8 @@ _NETWORKFORMAT_VALUEFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7806,
-  serialized_end=7891,
+  serialized_start=7847,
+  serialized_end=7932,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_VALUEFORMAT)
 
@@ -264,8 +264,8 @@ _NETWORKFORMAT_MOVESLEFTFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7893,
-  serialized_end=7950,
+  serialized_start=7934,
+  serialized_end=7991,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_MOVESLEFTFORMAT)
 
@@ -329,8 +329,8 @@ _NETWORKFORMAT_ACTIVATIONFUNCTION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=7953,
-  serialized_end=8195,
+  serialized_start=7994,
+  serialized_end=8236,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_ACTIVATIONFUNCTION)
 
@@ -354,8 +354,8 @@ _NETWORKFORMAT_DEFAULTACTIVATION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=8197,
-  serialized_end=8274,
+  serialized_start=8238,
+  serialized_end=8315,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_DEFAULTACTIVATION)
 
@@ -384,8 +384,8 @@ _NETWORKFORMAT_INPUTEMBEDDINGFORMAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=8276,
-  serialized_end=8382,
+  serialized_start=8317,
+  serialized_end=8423,
 )
 _sym_db.RegisterEnumDescriptor(_NETWORKFORMAT_INPUTEMBEDDINGFORMAT)
 
@@ -409,8 +409,8 @@ _FORMAT_ENCODING = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=8497,
-  serialized_end=8534,
+  serialized_start=8538,
+  serialized_end=8575,
 )
 _sym_db.RegisterEnumDescriptor(_FORMAT_ENCODING)
 
@@ -444,8 +444,8 @@ _ONNXMODEL_DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=8721,
-  serialized_end=8791,
+  serialized_start=8762,
+  serialized_end=8832,
 )
 _sym_db.RegisterEnumDescriptor(_ONNXMODEL_DATATYPE)
 
@@ -939,6 +939,13 @@ _WEIGHTS_MHA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='abs_pe', full_name='pblczero.Weights.MHA.abs_pe', index=18,
+      number=19, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -952,7 +959,7 @@ _WEIGHTS_MHA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=3275,
-  serialized_end=3986,
+  serialized_end=4027,
 )
 
 _WEIGHTS_FFN = _descriptor.Descriptor(
@@ -1031,8 +1038,8 @@ _WEIGHTS_FFN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3989,
-  serialized_end=4326,
+  serialized_start=4030,
+  serialized_end=4367,
 )
 
 _WEIGHTS_ENCODERLAYER = _descriptor.Descriptor(
@@ -1097,8 +1104,8 @@ _WEIGHTS_ENCODERLAYER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4329,
-  serialized_end=4593,
+  serialized_start=4370,
+  serialized_end=4634,
 )
 
 _WEIGHTS_POLICYHEAD = _descriptor.Descriptor(
@@ -1198,8 +1205,8 @@ _WEIGHTS_POLICYHEAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4596,
-  serialized_end=5081,
+  serialized_start=4637,
+  serialized_end=5122,
 )
 
 _WEIGHTS_FUTUREHEAD = _descriptor.Descriptor(
@@ -1236,8 +1243,8 @@ _WEIGHTS_FUTUREHEAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5083,
-  serialized_end=5181,
+  serialized_start=5124,
+  serialized_end=5222,
 )
 
 _WEIGHTS_VALUEHEAD = _descriptor.Descriptor(
@@ -1337,8 +1344,8 @@ _WEIGHTS_VALUEHEAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5184,
-  serialized_end=5689,
+  serialized_start=5225,
+  serialized_end=5730,
 )
 
 _WEIGHTS_POLICYHEADS = _descriptor.Descriptor(
@@ -1410,8 +1417,8 @@ _WEIGHTS_POLICYHEADS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5692,
-  serialized_end=6027,
+  serialized_start=5733,
+  serialized_end=6068,
 )
 
 _WEIGHTS_VALUEHEADS = _descriptor.Descriptor(
@@ -1455,8 +1462,8 @@ _WEIGHTS_VALUEHEADS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6030,
-  serialized_end=6168,
+  serialized_start=6071,
+  serialized_end=6209,
 )
 
 _WEIGHTS = _descriptor.Descriptor(
@@ -1795,7 +1802,7 @@ _WEIGHTS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=92,
-  serialized_end=6168,
+  serialized_end=6209,
 )
 
 
@@ -1861,8 +1868,8 @@ _TRAININGPARAMS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6171,
-  serialized_end=6311,
+  serialized_start=6212,
+  serialized_end=6352,
 )
 
 
@@ -1965,8 +1972,8 @@ _NETWORKFORMAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6314,
-  serialized_end=8382,
+  serialized_start=6355,
+  serialized_end=8423,
 )
 
 
@@ -2005,8 +2012,8 @@ _FORMAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8385,
-  serialized_end=8534,
+  serialized_start=8426,
+  serialized_end=8575,
 )
 
 
@@ -2080,8 +2087,8 @@ _ONNXMODEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8537,
-  serialized_end=8791,
+  serialized_start=8578,
+  serialized_end=8832,
 )
 
 
@@ -2154,8 +2161,8 @@ _NET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8794,
-  serialized_end=9039,
+  serialized_start=8835,
+  serialized_end=9080,
 )
 
 _WEIGHTS_LAYER.containing_type = _WEIGHTS
@@ -2205,6 +2212,7 @@ _WEIGHTS_MHA.fields_by_name['k_s'].message_type = _WEIGHTS_LAYER
 _WEIGHTS_MHA.fields_by_name['v_s'].message_type = _WEIGHTS_LAYER
 _WEIGHTS_MHA.fields_by_name['s2'].message_type = _WEIGHTS_LAYER
 _WEIGHTS_MHA.fields_by_name['dense_s'].message_type = _WEIGHTS_LAYER
+_WEIGHTS_MHA.fields_by_name['abs_pe'].message_type = _WEIGHTS_LAYER
 _WEIGHTS_MHA.containing_type = _WEIGHTS
 _WEIGHTS_FFN.fields_by_name['dense1_w'].message_type = _WEIGHTS_LAYER
 _WEIGHTS_FFN.fields_by_name['dense1_b'].message_type = _WEIGHTS_LAYER
