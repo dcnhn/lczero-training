@@ -101,7 +101,7 @@ python lc0_data_scraper.py
   --lczero-url https://storage.lczero.org/files/training_data/test91/
 ```
 
-#### `--lczero-url`
+<!-- #### `--lczero-url`
 
 Base URL to scrape for LCZero training data.
 Default: https://storage.lczero.org/files/training_data/
@@ -110,7 +110,13 @@ Default: https://storage.lczero.org/files/training_data/
 
 Number of the largest .tar files (by size) to save to the output list.
 Type: integer
-Default: 10
+Default: 10 -->
+
+| Option         | Description                                           | Type    | Default                                                   |
+|----------------|-------------------------------------------------------|---------|-----------------------------------------------------------|
+| `--lczero-url` | Base URL to scrape for LCZero training data            | string  | `https://storage.lczero.org/files/training_data/`         |
+| `--save-top`   | Number of the largest `.tar` files (by size) to save   | integer | `10`                                                      |
+
 
 To download the data, you can execute the following command (assuming the default file name):
 ```bash
