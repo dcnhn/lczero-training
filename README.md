@@ -33,7 +33,7 @@ These schemas are not directly usable by Python. They must first be compiled int
 Without compiling these `.proto` files, the corresponding Python imports will fail and any code relying on these message definitions will not run.
 
 **Note:**
-The repository **already** includes pre-compiled Python files in `tf/proto/`. If you modify any `.proto` files, you must run `init.sh` to regenerate the corresponding Python files in `tf/proto/` so that the changes are reflected in the Python code.
+The repository **already** includes pre-compiled Python files in `tf/proto/`. If you modify any `.proto` files, you must run `init.sh` to regenerate the corresponding Python files in `tf/proto/` so that the changes are reflected in the Python code. **As provided, the repository is fully self-contained and can be used without running any compilation steps.**
 
 
 ## Setup of Conda Environment and Repository
@@ -75,9 +75,49 @@ This command runs a small-scale debug training to validate that all dependencies
 A successful run should complete without errors and produce output similar to the following:
 ![Successful debug training run](doc/finished_debug_train.png)
 
+# Training
 
+## Data preparation
+In order to start a training session you first need to download training data from https://storage.lczero.org/files/training_data/.
+The **LCZero database** contains multiple versions of the training data format, reflecting changes and improvements over time.<br>
+⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
 
-> All setup commands assume your terminal is opened at the **root directory of this repository**
+### [OPTIONAL] Automated Data Fetching and Download
+
+For convenience, a script is provided that can fetch training data from:
+
+- `https://storage.lczero.org/files/training_data/`
+- or `https://storage.lczero.org/files/training_data/<SUB_DIR>/`
+
+The script performs the following tasks:
+
+- Filters out all data generated **before 2024**
+- Generates a **csv-file** containing metadata
+- Generates a **txt-file** (default name: *lczero_largest_10_tars.txt*) containing only URLs, suitable for use with `wget`
+
+For example:
+```bash
+python lc0_data_scraper.py 
+  --lczero-url https://storage.lczero.org/files/training_data/test91/
+```
+
+#### `--lczero-url`
+
+Base URL to scrape for LCZero training data.
+Default: https://storage.lczero.org/files/training_data/
+
+#### `--save-top`
+
+Number of the largest .tar files (by size) to save to the output list.
+Type: integer
+Default: 10
+
+To download the data, you can execute the following command (assuming the default file name):
+```bash
+wget -i lczero_largest_10_tars.txt -c
+```
+File free to modify the text file before starting the download process.
+
 
 # Quickstart
 

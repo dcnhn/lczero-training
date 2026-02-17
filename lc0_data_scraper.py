@@ -122,13 +122,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--save-top",
         type=int,
-        default=50,
-        help="Number of largest .tar URLs to save (default: 50)",
+        default=10,
+        help="Number of largest .tar URLs to save (default: 10)",
     )
 
     args = parser.parse_args()
 
     files = fetch_tar_files(args.lczero_url)
+
+    # Sanity check: URL must start with DEFAULT_BASE_URL
+    if not args.lczero_url.startswith(DEFAULT_BASE_URL):
+        parser.error(f"--lczero-url must start with {DEFAULT_BASE_URL}")
 
     # Keep only files dated 2024-01-01 or newer
     cutoff = 20240101
