@@ -64,7 +64,11 @@ pip install -r ./tf/requirements_cpu.txt
 ## Verify Environment Setup
 Run the following script to verify that the environment is correctly configured:
 ```bash
+# For GPU
 python tf/train.py --cfg tf/configs/debug.yaml  --output ./tmp/debug.txt
+
+# For CPU
+python tf/train.py --cfg tf/configs/debug_cpu.yaml  --output ./tmp/debug.txt
 ```
 This command runs a small-scale debug training to validate that all dependencies, configurations, and runtime components are working correctly.
 
