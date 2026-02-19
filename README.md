@@ -15,7 +15,7 @@ The project adapts the original Leela Chess Zero training pipeline to support tr
 - **For training with GPU:** An NVIDIA GPU with a compatible NVIDIA driver installed.
   - Must support **CUDA ≥ 12.2**
 - All scripts/commands assume your terminal is opened at the **root directory of this repository**
-- The Protocol Buffers compiler (`protoc`) must be installed:
+- [Recommended] The Protocol Buffers compiler (`protoc`) is installed:
   ```bash
   sudo apt update
   sudo apt install -y protobuf-compiler
