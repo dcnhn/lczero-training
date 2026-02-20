@@ -101,17 +101,6 @@ python lc0_data_scraper.py
   --lczero-url https://storage.lczero.org/files/training_data/test91/
 ```
 
-<!-- #### `--lczero-url`
-
-Base URL to scrape for LCZero training data.
-Default: https://storage.lczero.org/files/training_data/
-
-#### `--save-top`
-
-Number of the largest .tar files (by size) to save to the output list.
-Type: integer
-Default: 10 -->
-
 | Option         | Description                                           | Type    | Default                                                   |
 |----------------|-------------------------------------------------------|---------|-----------------------------------------------------------|
 | `--lczero-url` | Base URL to scrape for LCZero training data            | string  | `https://storage.lczero.org/files/training_data/`         |
@@ -122,10 +111,27 @@ To download the data, you can execute the following command (assuming the defaul
 ```bash
 wget -i lczero_largest_10_tars.txt -c
 ```
-File free to modify the text file before starting the download process.
+Feel free to modify the text file before starting the download process.
+
+### Data Preprocessing
+TODO: Explain rescoring of the training data
+
+## Training Configuration
+TODO: Write something about yaml configurations and explain parameters in the config
 
 
-# Quickstart
+## Training Process
+TODO: Describe how training is started
+
+
+## Tensorboard
+TODO: Explain how a board is started
+
+
+
+
+
+<!-- # Quickstart
 
 ## Installation
 
@@ -191,7 +197,7 @@ Thresholded policy accuracies: the thresholded policy accuracy @x% is the percen
 
 Reducible policy loss is the amount of policy loss we can reduce, i.e., the policy loss minus the entropy of the policy target.
 
-The search policy loss is designed to loosely describe how long it would take to find the best move in the average position. It is implemented as the average of the multiplicative inverses of the network's policies at the targets' top moves, or one over the harmonic mean of those values. This is not too accurate since the search algorithm will often give up on moves the network does not like unless they provide returns that the network can immediately recognize.
+The search policy loss is designed to loosely describe how long it would take to find the best move in the average position. It is implemented as the average of the multiplicative inverses of the network's policies at the targets' top moves, or one over the harmonic mean of those values. This is not too accurate since the search algorithm will often give up on moves the network does not like unless they provide returns that the network can immediately recognize. -->
 
 
 
