@@ -11,7 +11,7 @@ The results obtained within the scope of this project are **not** presented in t
 This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
 
 The project adapts the original Leela Chess Zero training pipeline to support transformer-based architectures. It is intended as a research-oriented codebase for exploring training dynamics, architectural choices, and reproducibility. 
-<br>
+
 This work was carried out in the context of the “Practical Work in AI (Master)” course within the Artificial Intelligence master’s program at Johannes Kepler University Linz (JKU). The results obtained within the scope of this project are **not** presented in this repository. Instead, they are described in detail in a separate report, which is not published here.
 
 
@@ -138,6 +138,13 @@ TODO: Describe how training is started
 TODO: Explain how a board is started
 
 
+# Evaluation
+
+## Creating an Agent
+TODO: Check out how to create an agent and document here.
+
+## Puzze-solving Evaluation
+TODO: Check out `https://github.com/google-deepmind/searchless_chess`
 
 
 
