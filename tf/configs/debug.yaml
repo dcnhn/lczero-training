@@ -18,8 +18,8 @@ dataset:
 training:
     check_numerics: false
     precision: half # single/half
-    swa: true
-    swa_output: true
+    swa: false
+    swa_output: false
     swa_max_n: 10
     swa_steps: 1000
     max_grad_norm: 10.0
@@ -68,7 +68,7 @@ training:
         future: 0.1
     path: 'networks'
 
-    optimizer: rmsprop # sgd/nadam/rmsprop/adabelief/adam
+    optimizer: adamw # sgd/nadam/rmsprop/adabelief/adam
     beta_1: 0.9
     beta_2: 0.999
     epsilon: 0.000001 # 1e-6 for better stability
@@ -111,7 +111,6 @@ model:
     use_rpe_q: false
     use_rpe_k: false
     use_rpe_v: false
-    abs_pe: true
 
     # Gating
     use_logit_gating: false

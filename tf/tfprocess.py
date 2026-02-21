@@ -746,6 +746,18 @@ class TFProcess:
         elif self.optimizer_name == "nadam":
             self.optimizer = tf.keras.optimizers.Nadam(
                 learning_rate=self.active_lr, beta_1=self.beta_1, beta_2=self.beta_2, epsilon=self.epsilon)
+        elif self.optimizer_name == "adamw":
+            self.optimizer = tf.keras.optimizers.AdamW(
+                learning_rate=self.active_lr,
+                weight_decay=self.weight_decay,
+                beta_1=self.beta_1,
+                beta_2=self.beta_2,
+                epsilon=self.epsilon
+            )
+
+            # Check if weight decay is enabled and exclude certain variables from weight decay if so
+            if self.weight_decay and self.weight_decay > 0:
+                self.optimizer.exclude_from_weight_decay(var_names=["bias", "gamma", "beta", "norm"])
         else:
             raise ValueError("Unknown optimizer: " + self.optimizer_name)
 
@@ -1709,42 +1721,50 @@ class TFProcess:
                 self.calculate_test_validations(steps)
 
         # Save session and weights at end, and also optionally every "checkpoint_steps".
-        if steps % self.cfg["training"]["total_steps"] == 0 or (
-                "checkpoint_steps" in self.cfg["training"]
-                and steps % self.cfg["training"]["checkpoint_steps"] == 0):
-            if True:
+        def create_checkpoint(steps):
+            if self.cfg["training"].get("disable_checkpoints", False):
+                return False
 
+            if (steps % self.cfg["training"]["total_steps"] == 0):
+                return True
 
-                # Checkpoint the model weights.
-                evaled_steps = steps.numpy()
-                self.manager.save(checkpoint_number=evaled_steps)
-                print("Model saved in file: {}".format(
-                    self.manager.latest_checkpoint))
+            ckpt_steps = self.cfg["training"].get("checkpoint_steps")
+            if ckpt_steps and (steps > 0) and (steps % ckpt_steps == 0):
+                return True
 
-                path = os.path.join(self.root_dir, self.cfg["name"])
-                leela_path = path + "-" + str(evaled_steps)
-                swa_path = path + "-swa-" + str(evaled_steps)
-                self.net.pb.training_params.training_steps = evaled_steps
+            return False
 
-                if self.swa_enabled:
-                    backup = self.read_weights()
-                    for (swa, w) in zip(self.swa_weights, self.model.weights):
-                        w.assign(swa.read_value())
-                    tf.saved_model.save(self.model, swa_path)
-                    for (old, w) in zip(backup, self.model.weights):
-                        w.assign(old)
+        if create_checkpoint(steps):
+            # Checkpoint the model weights.
+            evaled_steps = steps.numpy()
+            self.manager.save(checkpoint_number=evaled_steps)
+            print("Model saved in file: {}".format(
+                self.manager.latest_checkpoint))
+
+            path = os.path.join(self.root_dir, self.cfg["name"])
+            leela_path = path + "-" + str(evaled_steps)
+            swa_path = path + "-swa-" + str(evaled_steps)
+            self.net.pb.training_params.training_steps = evaled_steps
+
+            if self.swa_enabled:
+                backup = self.read_weights()
+                for (swa, w) in zip(self.swa_weights, self.model.weights):
+                    w.assign(swa.read_value())
+                tf.saved_model.save(self.model, swa_path)
+                for (old, w) in zip(backup, self.model.weights):
+                    w.assign(old)
+            
+            else:
+                tf.saved_model.save(self.model, leela_path)
+
+            if not self.cfg["training"].get("disable_pb_checkpointing"):
                 
+                #self.save_leelaz_weights(leela_path)
+                if self.swa_enabled:
+                    self.save_swa_weights(swa_path)
+
                 else:
-                    tf.saved_model.save(self.model, leela_path)
-
-                if not self.cfg["training"].get("disable_pb_checkpointing"):
-                    
-                    #self.save_leelaz_weights(leela_path)
-                    if self.swa_enabled:
-                        self.save_swa_weights(swa_path)
-
-                    else:
-                        self.save_leelaz_weights(leela_path)
+                    self.save_leelaz_weights(leela_path)
 
         if self.profiling_start_step is not None and (
                 steps >= self.profiling_start_step +
