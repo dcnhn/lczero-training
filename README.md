@@ -206,41 +206,41 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 
 ### General Settings
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used in this work |
 |-----------|------|-------------|---------|-------------------|
-| `name` | string | Unique identifier for the training run. Used for checkpoint directories and TensorBoard logs. | `"cf-6m-adamw-wRPE"` | |
-| `gpu` | string | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | |
+| `name` | string | Unique identifier for the training run. Used for checkpoint directories and TensorBoard logs. | `"my-model"` | :white_check_mark: |
+| `gpu` | string | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
 
-### Dataset Settings (`dataset:`)
+### Dataset Settings (`dataset`)
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used in this work |
 |-----------|------|-------------|---------|-------------------|
-| `num_chunks` | int | Maximum number of chunk files to load. Set high and use `allow_less_chunks: true` to load all available. | `500_000_000` | |
-| `allow_less_chunks` | bool | If `true`, training proceeds even if fewer chunks than `num_chunks` are found. | `true` | |
-| `train_ratio` | float | Fraction of data used for training (remainder used for testing). | `0.95` | |
-| `sort_type` | string | How to sort chunk files before splitting. `"name"` sorts alphabetically, `"random"` shuffles. | `"name"` | |
-| `input` | list | List of paths (relative or absolute) to directories containing `.gz` chunk files. | See example below | |
-| `train_workers` | int | Number of parallel workers for loading training data. Higher values increase RAM usage. | `10` | |
-| `test_workers` | int | Number of parallel workers for loading test data. | `4` | |
-| `fast_chunk_loading` | bool | If `true`, uses optimized chunk loading (recommended). | `true` | |
-| `pc_min` | int | (Optional) Minimum piece count filter for positions. | `0` | |
-| `pc_max` | int | (Optional) Maximum piece count filter for positions. | `6` | |
+| `num_chunks` | int | Maximum number of chunk files to load. Set high and use `allow_less_chunks: true` to load all available. | `500_000_000` | Kept at default |
+| `allow_less_chunks` | bool | If `true`, training proceeds even if fewer chunks than `num_chunks` are found. | `true` | Kept at default |
+| `train_ratio` | float | Fraction of data used for training (remainder used for testing). | `0.95` | Kept at default |
+| `sort_type` | string | How to sort chunk files before selecting `num_chunks`. `"mtime"` = by modification time (newest first), `"name"` = alphabetically, `"number"` = by game number in filename. "Latest" files first. | `"name"` | Kept at default |
+| `input` | list | List of paths (relative or absolute) to directories containing `.gz` chunk files. | See example below | :white_check_mark: |
+| `train_workers` | int | Number of parallel workers for loading training data. Higher values increase RAM usage. | `10` | :white_check_mark: |
+| `test_workers` | int | Number of parallel workers for loading test data. | `4` | :white_check_mark: |
+| `fast_chunk_loading` | bool | If `true`, uses optimized chunk loading (recommended). | `true` | Kept at default |
+| `pc_min` | int | (Optional) Minimum piece count filter for positions. | `0` | Kept at default |
+| `pc_max` | int | (Optional) Maximum piece count filter for positions. | `6` | Kept at default |
 
-### Training Settings (`training:`)
+### Training Settings (`training`)
 
 #### General Training
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used in this work |
 |-----------|------|-------------|---------|-------------------|
-| `precision` | string | Floating-point precision. `"half"` (FP16) is faster and uses less memory, `"single"` (FP32) is more stable. | `"half"` | |
-| `batch_size` | int | Total batch size across all GPUs. | `2048` | |
-| `num_batch_splits` | int | Split batch for gradient accumulation. Effective batch = `batch_size`, but memory usage ≈ `batch_size / num_batch_splits`. | `1` | |
-| `total_steps` | int | Total number of training steps. | `200_000` | |
-| `warmup_steps` | int | Number of steps for linear learning rate warmup from 0 to initial LR. | `200` | |
-| `shuffle_size` | int | Size of the shuffle buffer. Larger = better randomization but more RAM. | `500_000` | |
-| `mask_legal_moves` | bool | If `true`, masks illegal moves in policy output (recommended). | `true` | |
-| `check_numerics` | bool | If `true`, checks for NaN/Inf during training. Useful for debugging but slower. | `false` | |
-| `max_grad_norm` | float | Maximum gradient norm for clipping. Prevents exploding gradients. | `10.0` | |
+| `precision` | string | Floating-point precision. `"half"` (FP16) is faster and uses less memory, `"single"` (FP32) is more stable. | `"half"` | :white_check_mark: |
+| `batch_size` | int | Total batch size across all GPUs. | `2048` | :white_check_mark: |
+| `num_batch_splits` | int | Split batch for gradient accumulation. Effective batch = `batch_size`, but memory usage ≈ `batch_size / num_batch_splits`. | `1` | :white_check_mark: |
+| `total_steps` | int | Total number of training steps. | `200_000` | :white_check_mark: |
+| `warmup_steps` | int | Number of steps for linear learning rate warmup from 0 to initial LR. | `1000` | :white_check_mark: |
+| `shuffle_size` | int | Size of the shuffle buffer. Larger = better randomization but more RAM. | `500_000` | :white_check_mark: |
+| `mask_legal_moves` | bool | If `true`, masks illegal moves in policy output (recommended). | `true` | Kept at default |
+| `check_numerics` | bool | If `true`, checks for NaN/Inf during training. Useful for debugging but slower. | `false` | :white_check_mark: for debugging |
+| `max_grad_norm` | float | Maximum gradient norm for clipping. Prevents exploding gradients. | `10.0` | Kept at default |
 
 #### Checkpointing
 
