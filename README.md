@@ -83,7 +83,7 @@ python tf/train.py --cfg tf/configs/debug_cpu.yaml  --output ./tmp/debug.txt
 This command runs a small-scale debug training to validate that all dependencies, configurations, and runtime components are working correctly.
 
 A successful run should complete without errors and produce output similar to the following:
-![Successful debug training run](doc/finished_debug_train.png)
+![Successful debug training run](docs/finished_debug_train.png)
 
 # Training
 
@@ -129,6 +129,8 @@ After downloading, extract the `.tar` archives to access the training chunks.
 
 
 ### Data Preprocessing
+
+> ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
 
 #### Data Format
 

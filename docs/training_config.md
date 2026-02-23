@@ -4,20 +4,23 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 
 ## General Settings
 
-| Parameter | Type | Description | Example/Default | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `name` | string | Unique identifier for the training run. Used for checkpoint directories and TensorBoard logs. | `"my-model"` | :white_check_mark: |
 | `gpu` | string | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
 
 ## Dataset Settings (`dataset`)
 
-| Parameter | Type | Description | Example/Default | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `num_chunks` | int | Maximum number of chunk files to load. Set high and use `allow_less_chunks: true` to load all available. | `500_000_000` | Kept at default |
 | `allow_less_chunks` | bool | If `true`, training proceeds even if fewer chunks than `num_chunks` are found. | `true` | Kept at default |
-| `train_ratio` | float | Fraction of data used for training (remainder used for testing). | `0.95` | Kept at default |
 | `sort_type` | string | How to sort chunk files before selecting `num_chunks`. `"mtime"` = by modification time (newest first), `"name"` = alphabetically, `"number"` = by game number in filename. "Latest" files first. | `"name"` | Kept at default |
 | `input` | list | List of paths (relative or absolute) to directories containing `.gz` chunk files. | See example above | :white_check_mark: |
+| `train_ratio` | float | Fraction of data used for training (remainder used for testing). | `0.95` | Kept at default |
+| `input_train` | list | List of paths for training data. Alternative to `input` and `train_ratio`. | — | :x: |
+| `input_test` | list | List of paths for test data. Alternative to `input` and `train_ratio`. | — | :x: |
+| `input_validation` | list | List of paths for validation data. Alternative to `input` and `train_ratio`. | — | :x: |
 | `train_workers` | int | Number of parallel workers for loading training data. Higher values increase RAM usage. | `10` | :white_check_mark: |
 | `test_workers` | int | Number of parallel workers for loading test data. | `4` | :white_check_mark: |
 | `fast_chunk_loading` | bool | If `true`, uses optimized chunk loading (recommended). | `true` | Kept at default |
@@ -28,7 +31,7 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 
 ### General Training
 
-| Parameter | Type | Description | Example/Default | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `precision` | string | Floating-point precision. `"half"` (FP16) is faster and uses less memory, `"single"` (FP32) is more stable. | `"half"` | :white_check_mark: |
 | `batch_size` | int | Total batch size across all GPUs. | `2048` | :white_check_mark: |
@@ -42,98 +45,104 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 
 ### Checkpointing
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `checkpoint_steps` | int | Save a checkpoint every N steps. | `10_000` | |
-| `disable_checkpoints` | bool | If `true`, disables all checkpointing (useful for parameter search). | `false` | |
-| `disable_pb_checkpointing` | bool | If `true`, disables protobuf checkpoint saving. | `false` | |
-| `path` | string | Directory where network weights are saved. | `"networks"` | |
+| `checkpoint_steps` | int | Save a checkpoint every N steps. | `10_000` | :white_check_mark: |
+| `disable_checkpoints` | bool | If `true`, disables all checkpointing (useful for parameter search). | `false` | :white_check_mark: in hyperparameter search |
+| `disable_pb_checkpointing` | bool | If `true`, disables protobuf (`.pb.gz`) checkpoint saving. Protobuf checkpoints are required to load weights into the LC0 engine for inference/play. | `false` | :white_check_mark: in hyperparameter search |
+| `path` | string | Directory where network weights are saved. | `"networks"` | Kept at default |
 
 ### Evaluation & Logging
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `test_steps` | int | Run evaluation on test set every N steps. | `10_000` | |
-| `num_test_positions` | int | Number of positions to evaluate during testing. | `65_536` | |
-| `train_avg_report_steps` | int | Log training metrics every N steps. | `1000` | |
-| `validation_steps` | int | (Optional) Run validation every N steps if validation dataset is configured. | `5000` | |
+| `test_steps` | int | Run evaluation on test set every N steps and log metrics to TensorBoard. | `10_000` | :white_check_mark: |
+| `num_test_positions` | int | Number of positions to evaluate during testing. The number of evaluation batches is: $n_{\text{eval}} = \frac{\texttt{num\_test\_positions}}{\texttt{batch\_size} / \texttt{num\_batch\_splits}} $ | `65_536` | :white_check_mark: |
+| `train_avg_report_steps` | int | Print averaged training metrics to the terminal every N steps. | `1000` | :white_check_mark: |
+| `validation_steps` | int | (Optional) Run validation every N steps if validation dataset is configured. | `5000` | :x: |
 
 ### Stochastic Weight Averaging (SWA)
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `swa` | bool | Enable Stochastic Weight Averaging for better generalization. | `true` | |
-| `swa_output` | bool | If `true`, outputs SWA-averaged weights in addition to regular weights. | `true` | |
-| `swa_max_n` | int | Maximum number of models to average in SWA. | `10` | |
-| `swa_steps` | int | Update SWA average every N steps. | `100` | |
+| `swa` | bool | Enable Stochastic Weight Averaging (implemented as exponential moving average of weights) for better generalization. | `true` | :white_check_mark:, disabled in hyperparameter search |
+| `swa_output` | bool | If `true`, outputs SWA-averaged weights in addition to regular weights. | `true` | :white_check_mark:, disabled in hyperparameter search |
+| `swa_max_n` | int | Maximum number of weight sets to average in SWA. | `10` | :white_check_mark:, disabled in hyperparameter search |
+| `swa_steps` | int | Update SWA average every N steps. | `100` | :white_check_mark:, disabled in hyperparameter search |
 
 ### Learning Rate Schedule
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `lr_values` | list | Learning rate values. First value is initial LR, subsequent values are used after corresponding boundaries. | `[0.0005, 0.00025, 0.0001]` | |
-| `lr_boundaries` | list | Step numbers at which to switch to next LR value. Must have `len(lr_values) - 1` entries. | `[55_000, 110_000]` | |
+| `lr_values` | list | Learning rate values. First value is initial LR, subsequent values are used after corresponding boundaries. | `[0.0005, 0.00025, 0.0001]` | :white_check_mark: |
+| `lr_boundaries` | list | Step numbers at which to switch to next LR value. Must have `len(lr_values) - 1` entries. | `[55_000, 110_000]` | :white_check_mark: |
 
 ### Optimizer Settings
 
-| Parameter | Type | Description | Example | Used in this work |
+> **Note:** Only SGD, RMSprop, AdamW, and Nadam have been tested in this work. **Nadam** caused NaN values in multi-GPU setups. Only AdamW currently supports weight decay.
+
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `optimizer` | string | Optimizer type: `"sgd"`, `"adam"`, `"adamw"`, `"nadam"`, `"rmsprop"`, `"adabelief"`. | `"adamw"` | |
-| `beta_1` | float | Exponential decay rate for first moment (Adam/AdamW/Nadam). | `0.9` | |
-| `beta_2` | float | Exponential decay rate for second moment (Adam/AdamW/Nadam). | `0.999` | |
-| `epsilon` | float | Small constant for numerical stability. | `1e-6` | |
-| `weight_decay` | float | Weight decay coefficient (only for AdamW). | `0.01` | |
-| `sparse` | bool | Use sparse updates (experimental). | `false` | |
-| `lookahead_optimizer` | bool | Wrap optimizer with Lookahead for smoother convergence. | `false` | |
+| `optimizer` | string | Optimizer type: `"sgd"`, `"adam"`, `"adamw"`, `"nadam"`, `"rmsprop"`, `"adabelief"`. | `"adamw"` | :white_check_mark: |
+| `beta_1` | float | Exponential decay rate for first moment (Adam/AdamW/Nadam). | `0.9` | Kept at default |
+| `beta_2` | float | Exponential decay rate for second moment (Adam/AdamW/Nadam). | `0.999` | Kept at default |
+| `epsilon` | float | Small constant for numerical stability (avoids division by zero). | `1e-6` | Kept at default |
+| `weight_decay` | float | Weight decay coefficient (only for AdamW). | `0.01` | :white_check_mark: |
+| `sparse` | bool | Use sparse updates (experimental). | `false` | Kept at default |
 
-### Batch Normalization / Renorm
 
-| Parameter | Type | Description | Example | Used in this work |
-|-----------|------|-------------|---------|-------------------|
-| `renorm` | bool | Use batch renormalization instead of standard batch norm. | `true` | |
-| `renorm_max_r` | float | Maximum ratio for renorm correction. | `1.0` | |
-| `renorm_max_d` | float | Maximum difference for renorm correction. | `0.0` | |
+### Unused parameters (Legacy)
 
-### Value Focus (Curriculum Learning)
+> **Note:** These parameters appear to be legacy code. These settings are not relevant for transformer training.
 
-| Parameter | Type | Description | Example | Used in this work |
-|-----------|------|-------------|---------|-------------------|
-| `value_focus_min` | float | Minimum value focus weight. | `1.0` | |
-| `value_focus_slope` | float | Slope for value focus increase over training. | `0.0` | |
+| Parameter | Used/Adapted in this work |
+|-----------|------|
+| `renorm` |  :x: |
+| `renorm_max_r` | :x: |
+| `renorm_max_d` |  :x: |
+| `value_focus_min` | :x: |
+| `value_focus_slope` | :x: |
+| `checkpoint_activations` | :x: |
+| `lookahead_optimizer` | :x: |
 
-### Advanced
 
-| Parameter | Type | Description | Example | Used in this work |
-|-----------|------|-------------|---------|-------------------|
-| `checkpoint_activations` | bool | Checkpoint activations to save memory (trades compute for memory). | `false` | |
 
-## Loss Weights (`training.loss_weights:`)
+## Loss Weights (`training.loss_weights`)
 
 All loss weights control the relative importance of each prediction head in the total loss.
+Refer to the appendix of the paper: [https://arxiv.org/abs/2409.12272](https://arxiv.org/abs/2409.12272).
 
-| Parameter | Type | Description | Paper Value | Used in this work |
+> **Note:** The L2 value loss, value error loss, and categorical value loss from the paper are each split into two parallel outputs in this implementation
+> - `value_q` and `value_st` (short-term) are parallel scalar outputs from the value head (long-term and short-term value).
+> - `value_q_err` and `value_st_err` are parallel error predictions for those two value outputs.
+> - `value_q_cat` and `value_st_cat` are parallel categorical value outputs (only used in the 240M model).
+
+
+| Parameter | Type | Description | Paper Value | Used/Adapted in this work |
 |-----------|------|-------------|-------------|-------------------|
-| `policy` | float | Weight for hard policy loss (cross-entropy with search policy). | `1.0` | |
-| `policy_soft` | float | Weight for soft policy loss (KL divergence with temperature-scaled policy). Higher because loss magnitude is smaller. | `8.0` | |
-| `policy_optimistic_st` | float | Weight for optimistic short-term policy. | `0.0` | |
-| `policy_opponent` | float | Weight for opponent policy prediction. | `0.0` | |
-| `policy_next` | float | Weight for next-move policy prediction. | `0.0` | |
-| `value_winner` | float | Weight for WDL (Win/Draw/Loss) prediction. | `1.0` | |
-| `value_q` | float | Weight for Q-value (L2 regression). | `1.0` | |
-| `value_st` | float | Weight for short-term value (L2 regression). | `1.0` | |
-| `value_q_err` | float | Weight for Q-value uncertainty estimation. | `1.0` | |
-| `value_st_err` | float | Weight for short-term value uncertainty estimation. | `1.0` | |
-| `value_q_cat` | float | Weight for categorical Q-value (only 240M model). | `0.0` (6M) / `0.1` (240M) | |
-| `value_st_cat` | float | Weight for categorical short-term value (only 240M model). | `0.0` (6M) / `0.1` (240M) | |
-| `moves_left` | float | Weight for moves-left prediction. | `1.0` | |
-| `reg` | float | Weight for L2 regularization (currently not implemented). | `0.0` | |
-| `future` | float | Weight for future position prediction. | `0.0` | |
+| `policy` | float | Weight for policy loss. | `1.0` | Paper value used |
+| `policy_soft` | float | Weight for soft policy loss (temperature-scaled policy). Higher because loss magnitude is smaller. | `8.0` | Paper value used |
+| `policy_optimistic_st` | float | Weight for optimistic short-term policy. | `0.0` | :x: |
+| `policy_opponent` | float | Weight for opponent policy prediction. | `0.0` | :x: |
+| `policy_next` | float | Weight for next-move policy prediction. | `0.0` | :x: |
+| `value_winner` | float | Weight for WDL (Win/Draw/Loss) prediction. | `1.0` | Paper value used |
+| `value_q` | float | Weight for Q-value (L2 regression). | `1.0` | Paper value used |
+| `value_st` | float | Weight for short-term value (L2 regression). | `1.0` | Paper value used |
+| `value_q_err` | float | Weight for Q-value uncertainty estimation. | `1.0` | Paper value used |
+| `value_st_err` | float | Weight for short-term value uncertainty estimation. | `1.0` | Paper value used |
+| `value_q_cat` | float | Weight for categorical Q-value (only 240M model). | `0.0` (6M) / `0.1` (240M) | Paper value used |
+| `value_st_cat` | float | Weight for categorical short-term value (only 240M model). | `0.0` (6M) / `0.1` (240M) | Paper value used |
+| `moves_left` | float | Weight for moves-left prediction. | `1.0` | Kept at default |
+| `reg` | float | Weight for L2 regularization (currently not implemented by authors, used AdamW instead). | `0.0` | :x: |
+| `future` | float | Weight for future position prediction. | `0.0` | :x: |
 
-## Model Architecture (`model:`)
+
+
+## Model Architecture (`model`)
 
 ### Transformer Dimensions
 
-| Parameter | Type | Description | 6M Value | 240M Value | Used in this work |
+| Parameter | Type | Description | 6M Value | 240M Value | Used/Adapted in this work |
 |-----------|------|-------------|----------|------------|-------------------|
 | `embedding_size` | int | Size of input embeddings. | `256` | `1024` | |
 | `encoder_layers` | int | Number of transformer encoder layers. | `8` | `15` | |
@@ -149,7 +158,7 @@ All loss weights control the relative importance of each prediction head in the 
 
 ### Embedding
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `embedding_style` | string | Embedding architecture: `"new"` (recommended) or `"old"`. | `"new"` | |
 | `embedding_dense_sz` | int | Dense layer size in embedding. | `32` | |
@@ -157,7 +166,7 @@ All loss weights control the relative importance of each prediction head in the 
 
 ### Position Encoding (RPE)
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `use_rpe_q` | bool | Use Relative Position Encoding for queries. | `true` | |
 | `use_rpe_k` | bool | Use Relative Position Encoding for keys. | `true` | |
@@ -167,7 +176,7 @@ All loss weights control the relative importance of each prediction head in the 
 
 Smolgen is a mechanism that dynamically generates attention weights based on the current board position. It was used in earlier BT-series models (BT2/BT3/BT4) but is **not used** in the paper's architecture, which relies on RPE instead. Smolgen and RPE address different aspects and are not mutually exclusive.
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `use_smolgen` | bool | Enable Smolgen dynamic attention generation. | `false` | |
 | `smolgen_hidden_channels` | int | Hidden channels in Smolgen. | `16` | |
@@ -177,7 +186,7 @@ Smolgen is a mechanism that dynamically generates attention weights based on the
 
 ### Output Heads
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `value` | string | Value output type: `"wdl"` (Win/Draw/Loss) or `"scalar"`. | `"wdl"` | |
 | `moves_left` | string | Moves-left head version. | `"v1"` | |
@@ -192,7 +201,7 @@ Smolgen is a mechanism that dynamically generates attention weights based on the
 
 ### Architecture Ablations
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `omit_qkv_biases` | bool | Remove biases from Q/K/V projections. Increases speed ~10% without quality loss. | `true` | |
 | `encoder_rms_norm` | bool | Use RMSNorm instead of LayerNorm. Faster without quality degradation. | `true` | |
@@ -200,7 +209,7 @@ Smolgen is a mechanism that dynamically generates attention weights based on the
 
 ### Quantization (Experimental)
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `quantize_activations` | bool | Quantize activations for inference. | `false` | |
 | `quantize_weights` | bool | Quantize weights for inference. | `false` | |
@@ -211,7 +220,7 @@ Smolgen is a mechanism that dynamically generates attention weights based on the
 
 ### Debug / Analysis
 
-| Parameter | Type | Description | Example | Used in this work |
+| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `return_attn_wts` | bool | Return attention weights (for visualization/analysis). | `true` | |
 | `return_activations` | bool | Return intermediate activations (for analysis). | `false` | |
