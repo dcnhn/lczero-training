@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-name: "cf-6m-search"
+name: "cf-6m-pol-0.5"
 gpu: "0,1,2,3" # CPU:"none"; 0 single GPU; "0,1,2,3" multiple GPUs; "all" all available GPUs
 dataset:
   num_chunks: 500_000_000
@@ -56,16 +56,16 @@ training:
         - 145_000
         - 165_000
     loss_weights:
-        policy: 1.0
+        policy: 0.8
         policy_optimistic_st: 0.0
-        policy_soft: 8.0 # loss is much smaller at optimum
+        policy_soft: 6.2 # loss is much smaller at optimum
         policy_opponent: 0.00
         policy_next: 0.00
-        value_winner: 1.0
-        value_q: 1.0
-        value_st: 1.0 # larger because mse loss
-        value_q_err: 1.0  # both error weights should be the same
-        value_st_err: 1.0
+        value_winner: 1.4
+        value_q: 1.4
+        value_st: 1.4 # larger because mse loss
+        value_q_err: 1.4  # both error weights should be the same
+        value_st_err: 1.4
         value_st_cat: 0.0 # only used in 240m
         value_q_cat: 0.0 # only used in 240m
         moves_left: 1.0
