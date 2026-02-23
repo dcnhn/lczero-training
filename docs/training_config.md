@@ -57,7 +57,7 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `test_steps` | int | Run evaluation on test set every N steps and log metrics to TensorBoard. | `10_000` | :white_check_mark: |
-| `num_test_positions` | int | Number of positions to evaluate during testing. The number of evaluation batches is: $n_{\text{eval}} = \frac{\texttt{num\_test\_positions}}{\texttt{batch\_size} / \texttt{num\_batch\_splits}} $ | `65_536` | :white_check_mark: |
+| `num_test_positions` | int | Number of positions to evaluate during testing. Number of evaluation batches: `num_test_positions` / (`batch_size` / `num_batch_splits`) | `65_536` | :white_check_mark: |
 | `train_avg_report_steps` | int | Print averaged training metrics to the terminal every N steps. | `1000` | :white_check_mark: |
 | `validation_steps` | int | (Optional) Run validation every N steps if validation dataset is configured. | `5000` | :x: |
 
@@ -141,86 +141,93 @@ Refer to the appendix of the paper: [https://arxiv.org/abs/2409.12272](https://a
 ## Model Architecture (`model`)
 
 ### Transformer Dimensions
+All values in this table are taken directly from the paper ([https://arxiv.org/abs/2409.12272](https://arxiv.org/abs/2409.12272)). Dropout is set as in Vaswani et al. ("Attention is All You Need"), since the authors did not specify dropout settings.
 
-| Parameter | Type | Description | 6M Value | 240M Value | Used/Adapted in this work |
-|-----------|------|-------------|----------|------------|-------------------|
-| `embedding_size` | int | Size of input embeddings. | `256` | `1024` | |
-| `encoder_layers` | int | Number of transformer encoder layers. | `8` | `15` | |
-| `encoder_heads` | int | Number of attention heads. Should divide `encoder_d_model`. | `8` | `32` | |
-| `encoder_d_model` | int | Dimension of Q, K, V vectors in attention. | `256` | `1024` | |
-| `encoder_dff` | int | Hidden dimension in feed-forward layers. | `256` | `4096` | |
-| `policy_embedding_size` | int | Embedding size for policy head. | `256` | `1024` | |
-| `policy_d_model` | int | Dimension for policy attention. | `256` | `1024` | |
-| `policy_d_aux` | int | Dimension for auxiliary policy layers. | `256` | `1024` | |
-| `value_embedding_size` | int | Embedding size for value head. | `32` | `32` | |
-| `moves_left_embedding_size` | int | Embedding size for moves-left head. | `32` | `32` | |
-| `dropout_rate` | float | Dropout rate during training (0.0 = disabled). | `0.0` | `0.0` | |
+| Parameter | Type | Description | 6M Value | 240M Value |
+|-----------|------|-------------|----------|------------|
+| `embedding_size` | int | Size of input embeddings. | `256` | `1024` | 
+| `encoder_layers` | int | Number of transformer encoder layers. | `8` | `15` | 
+| `encoder_heads` | int | Number of attention heads. Should divide `encoder_d_model`. | `8` | `32` | 
+| `encoder_d_model` | int | Dimension of Q, K, V vectors in attention. | `256` | `1024` | 
+| `encoder_dff` | int | Hidden dimension in feed-forward layers. | `256` | `4096` | 
+| `policy_embedding_size` | int | Embedding size for policy head. | `256` | `1024` | 
+| `policy_d_model` | int | Dimension for policy attention. | `256` | `1024` | 
+| `policy_d_aux` | int | Dimension for auxiliary policy layers. | `256` | `1024` | 
+| `value_embedding_size` | int | Embedding size for value head. | `32` | `32` | 
+| `moves_left_embedding_size` | int | Embedding size for moves-left head. | `32` | `32` | 
+| `dropout_rate` | float | Dropout rate during training (0.0 = disabled). | `0.1` | `0.1` | 
 
 ### Embedding
+**Note:** `embedding_style` must be set to `"new"` as using `"old"` has caused errors.
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `embedding_style` | string | Embedding architecture: `"new"` (recommended) or `"old"`. | `"new"` | |
-| `embedding_dense_sz` | int | Dense layer size in embedding. | `32` | |
-| `input_type` | string | Input encoding type. `"classic"` for standard board representation. | `"classic"` | |
+| `embedding_style` | string | Embedding architecture: `"new"` (recommended) or `"old"`. | `"new"` | Kept at default |
+| `embedding_dense_sz` | int | Dense layer size in embedding. | `32` | Kept at default |
+| `input_type` | string | Input encoding type. `"classic"` for standard board representation. | `"classic"` | Kept at default |
 
-### Position Encoding (RPE)
-
-| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
-|-----------|------|-------------|---------|-------------------|
-| `use_rpe_q` | bool | Use Relative Position Encoding for queries. | `true` | |
-| `use_rpe_k` | bool | Use Relative Position Encoding for keys. | `true` | |
-| `use_rpe_v` | bool | Use Relative Position Encoding for values. | `true` | |
-
-### Smolgen (Dynamic Attention Generation)
-
-Smolgen is a mechanism that dynamically generates attention weights based on the current board position. It was used in earlier BT-series models (BT2/BT3/BT4) but is **not used** in the paper's architecture, which relies on RPE instead. Smolgen and RPE address different aspects and are not mutually exclusive.
+### Position Encoding (PE)
+**Note:** Relative Position Encoding (RPE) is used by default in this work. Absolute Position Encoding (`use_absolute_pe`) was only used in an ablation experiment. If `use_absolute_pe` is set to `true`, all RPE options (`use_rpe_q`, `use_rpe_k`, `use_rpe_v`) must be set to `false`. Conversely, if any RPE option is `true`, `use_absolute_pe` must be `false`.
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `use_smolgen` | bool | Enable Smolgen dynamic attention generation. | `false` | |
-| `smolgen_hidden_channels` | int | Hidden channels in Smolgen. | `16` | |
-| `smolgen_hidden_sz` | int | Hidden size in Smolgen. | `64` | |
-| `smolgen_gen_sz` | int | Generator size in Smolgen. | `64` | |
-| `smolgen_activation` | string | Activation function for Smolgen. | `"swish"` | |
+| `use_rpe_q` | bool | Use Relative Position Encoding for queries. | `true` | :white_check_mark: |
+| `use_rpe_k` | bool | Use Relative Position Encoding for keys. | `true` | :white_check_mark: |
+| `use_rpe_v` | bool | Use Relative Position Encoding for values. | `true` | :white_check_mark: |
+| `use_absolute_pe` | bool | Use Relative Position Encoding for values. | `false` | Only in ablation experiment. |
+
+### Smolgen
+
+**Note:** The following parameters were not mentioned in the paper. Therefore, this feature is disabled.
+
+| Parameter | Used/Adapted in this work |
+|-----------|------|
+| `use_smolgen` | :x:, set to `false` |
+| `smolgen_hidden_channels` | :x: |
+| `smolgen_hidden_sz` | int | :x: |
+| `smolgen_gen_sz` | :x: |
+| `smolgen_activation` | :x: |
 
 ### Output Heads
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `value` | string | Value output type: `"wdl"` (Win/Draw/Loss) or `"scalar"`. | `"wdl"` | |
-| `moves_left` | string | Moves-left head version. | `"v1"` | |
-| `value_st` | bool | Enable short-term value head. | `true` | |
-| `value_q` | bool | Enable Q-value head. | `true` | |
-| `soft_policy` | bool | Enable soft policy head. | `true` | |
-| `soft_policy_temperature` | float | Temperature for soft policy. | `4.0` | |
-| `categorical_value_buckets` | int | Number of buckets for categorical value (240M only). | `32` | |
-| `policy_optimistic_st` | bool | Enable optimistic short-term policy head. | `false` | |
-| `policy_opponent` | bool | Enable opponent policy prediction head. | `false` | |
-| `policy_next` | bool | Enable next-move policy prediction head. | `false` | |
+| `value` | string | Value output type: `"wdl"` (Win/Draw/Loss) or `"scalar"`. | `"wdl"` | Used 'wdl' as in the paper |
+| `moves_left` | string | Moves-left head version. | `"v1"` | Kept at default |
+| `value_st` | bool | Enable short-term value head. | `true` | Used as in the paper |
+| `value_q` | bool | Enable Q-value head. | `true` | Used as in the paper |
+| `soft_policy` | bool | Enable soft policy head. | `true` | Used as in the paper |
+| `soft_policy_temperature` | float | Temperature for soft policy. | `4.0` | Kept at default as paper did not mention a value |
+| `categorical_value_buckets` | int | Number of buckets for categorical value (240M only). | `32` | Kept at default |
+| `policy_optimistic_st` | bool | Enable optimistic short-term policy head. | `false` | :x: |
+| `policy_opponent` | bool | Enable opponent policy prediction head. | `false` | :x: |
+| `policy_next` | bool | Enable next-move policy prediction head. | `false` | :x: |
 
 ### Architecture Ablations
 
-| Parameter | Type | Description | Example/Default | Used/Adapted in this work |
-|-----------|------|-------------|---------|-------------------|
-| `omit_qkv_biases` | bool | Remove biases from Q/K/V projections. Increases speed ~10% without quality loss. | `true` | |
-| `encoder_rms_norm` | bool | Use RMSNorm instead of LayerNorm. Faster without quality degradation. | `true` | |
-| `use_logit_gating` | bool | Use logit gating mechanism. | `false` | |
-
-### Quantization (Experimental)
+**Note:** Omitting QKV biases and using RMSNorm follow the paper; logit gating is disabled because it is not mentioned in the paper.
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `quantize_activations` | bool | Quantize activations for inference. | `false` | |
-| `quantize_weights` | bool | Quantize weights for inference. | `false` | |
-| `quantize_activation_bits` | int | Bit width for activation quantization. | `8` | |
-| `quantize_weight_bits` | int | Bit width for weight quantization. | `8` | |
-| `quantize_channels` | bool | Per-channel quantization. | `false` | |
-| `rep_quant` | bool | Representation quantization. | `false` | |
+| `omit_qkv_biases` | bool | Remove biases from Q/K/V projections. | `true` | Kept at default |
+| `encoder_rms_norm` | bool | Use RMSNorm instead of LayerNorm. Faster without quality degradation. | `true` | Kept at default |
+| `use_logit_gating` | bool | Use logit gating mechanism. | `false` | :x: |
+
+### Quantization 
+**Note:** The following parameters were not mentioned in the paper. Therefore, this feature is disabled.
+
+| Parameter | Used/Adapted in this work |
+|-----------|------|
+| `quantize_activations` | :x: |
+| `quantize_weights` | :x: |
+| `quantize_activation_bits` | :x: |
+| `quantize_weight_bits` | :x: |
+| `quantize_channels` | :x: |
+| `rep_quant` | :x: |
 
 ### Debug / Analysis
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `return_attn_wts` | bool | Return attention weights (for visualization/analysis). | `true` | |
-| `return_activations` | bool | Return intermediate activations (for analysis). | `false` | |
+| `return_attn_wts` | bool | Return attention weights (for visualization/analysis). | `true` | :white_check_mark:, this feature is need to visualize the attention maps. |
+| `return_activations` | bool | Return intermediate activations (for analysis). | `false` | :x:, used default |
