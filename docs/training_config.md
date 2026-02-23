@@ -7,7 +7,7 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `name` | string | Unique identifier for the training run. Used for checkpoint directories and TensorBoard logs. | `"my-model"` | :white_check_mark: |
-| `gpu` | string | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
+| `gpu` | string (int for Single-GPU) | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
 
 ## Dataset Settings (`dataset`)
 
@@ -184,7 +184,7 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 |-----------|------|
 | `use_smolgen` | :x:, set to `false` |
 | `smolgen_hidden_channels` | :x: |
-| `smolgen_hidden_sz` | int | :x: |
+| `smolgen_hidden_sz` | :x: |
 | `smolgen_gen_sz` | :x: |
 | `smolgen_activation` | :x: |
 

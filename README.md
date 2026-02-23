@@ -92,7 +92,8 @@ A successful run should complete without errors and produce output similar to th
 ## Data preparation
 In order to start a training session you first need to download training data from https://storage.lczero.org/files/training_data/.
 The **LCZero database** contains multiple versions of the training data format, reflecting changes and improvements over time.<br>
-⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
+> ⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
+> ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
 
 ### [OPTIONAL] Automated Data Fetching and Download
 
@@ -129,8 +130,6 @@ After downloading, extract the `.tar` archives to access the training chunks.
 
 
 ### Data Preprocessing
-
-> ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
 
 #### Data Format
 
@@ -202,9 +201,24 @@ This script reads the same `dataset.input` paths from your YAML configuration an
 
 
 
-## Training Configuration
+## Training Configurations
 
 Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/training_config.md)**.
+
+Available configurations can be found in `tf/configs`:
+
+| Name | Purpose | Description |
+|------|------------|-------------|
+| `12m_multi_gpu_rmsprop-wAPE.yaml` | Positional Encoding | 12M-parameter configuration for RPE ablation experiments. Uses absolute positional encoding (APE). |
+| `6m_multi_gpu_rmsprop-wRPE.yaml` | Positional Encoding | 6M-parameter configuration for RPE ablation experiments. Uses relative position encoding (RPE). |
+| `6m_multi_gpu_rmsprop-wAPE.yaml` | Positional Encoding | 6M-parameter configuration for RPE ablation experiments. Uses absolute positional encoding (APE). |
+| `6m_multi_gpu_rmsprop-wRPE-newData.yaml` | Training Data Effect | 6M parameter model using newer data from 2026. Used to check if training data impacts model performance. |
+| `6m_multi_gpu_rmsprop-wRPE-smallSet.yaml` | Training Data Effect | 6M parameter model using older data from 2021. Used to check if training data impacts model performance. |
+| `6m_multi_gpu_adamw-wRPE.yaml` | Optimizer Effect | Initial experiments used RMSprop because Nadam led to NaNs in multi-GPU setups. This config uses AdamW to check for improvement or regression compared to RMSprop. |
+| `240m_multi_gpu_adamw.yaml` | Not applicable | 240M parameter model using AdamW optimizer. Hardware was not sufficient for training. |
+| `debug_cpu.yaml` | Setup | Minimal debug configuration for CPU. Only used to verify setup. |
+| `debug.yaml` | Setup | Minimal debug configuration for GPU. Only used to verify setup. |
+| `example.yaml` | Not applicable | Example configuration from https://github.com/daniel-monroe/lczero-training. |
 
 
 ## Training Process
