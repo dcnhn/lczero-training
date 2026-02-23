@@ -8,24 +8,7 @@ dataset:
   train_ratio: 0.95
   sort_type: name
   input:
-    - '../../lczero-training/merged/'
-    # - 'training-run1--20210605-0516/'
-    # - 'training-run1--20230415-1317/'
-    # - 'training-run1--20230415-1417/'
-    # - 'training-run1--20230505-0217/'
-    # - 'training-run1--20230505-0317/'
-    # - 'training-run1--20230505-0817/'
-    # - 'training-run1--20230505-0917/'
-    # - 'training-run1--20240819-1917/'
-    # - 'training-run1--20250209-1017/'
-    # - 'training-run2--20210605-0517/'
-    # - 'training-run3--20210605-0521/'
-    # - 'training-run3-test75-20210314-1134/'
-    # - 'training-run3-test75-20210603-1203/'
-    # - 'training-run3-test75-20210618-0354/'
-    # - 'training-run3-test75-20210815-1418/'
-    # - 'training-run3-test75-20210923-1917/'
-    # - 'training-run3-test75-20210924-0617/'
+    - 'merged/'
   train_workers: 20
   test_workers: 4
   fast_chunk_loading: true
@@ -53,10 +36,10 @@ training:
 
     # validation_steps: 5000
     num_test_positions: 256 # num_evals = num_test_positions // (batch_size // num_batch_splits)
-    train_avg_report_steps: 50
-    total_steps: 2_200_000 # Reduced from 3_700_000 (CF-240M paper run) due to compute limitations
+    train_avg_report_steps: 10000
+    total_steps: 3_700_000 # Reduced from 3_700_000 (CF-240M paper run) due to compute limitations
     checkpoint_steps: 100_000
-    shuffle_size: 2_000_000
+    shuffle_size: 500_000
     warmup_steps: 1000
     mask_legal_moves: true
     lr_values: 
@@ -85,9 +68,9 @@ training:
     path: 'networks'
 
     optimizer: nadam # sgd/nadam/rmsprop/adabelief/adam
-    beta_1: 0.9 
+    beta_1: 0.9
     beta_2: 0.98
-    epsilon: 0.00000001 # 1e-7 (Nadam default, was 1e-6)
+    epsilon: 0.000001 # 1e-6 for better stability
     sparse: false
 
     return_attn_wts: false
@@ -134,7 +117,7 @@ model:
 
     # Ablations
     omit_qkv_biases: true # these two increases training speed by ~10% on BT4 
-    encoder_rms_norm: false
+    encoder_rms_norm: true
 
     # Output heads
     policy_optimistic_st: false
