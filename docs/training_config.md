@@ -229,5 +229,5 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `return_attn_wts` | bool | Return attention weights (for visualization/analysis). | `true` | :white_check_mark:, this feature is need to visualize the attention maps. |
+| `return_attn_wts` | bool | Return attention weights (for visualization/analysis). | `true` | :white_check_mark:, this feature is needed to visualize the attention maps. |
 | `return_activations` | bool | Return intermediate activations (for analysis). | `false` | :x:, used default |
