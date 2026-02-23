@@ -87,6 +87,8 @@ A successful run should complete without errors and produce output similar to th
 
 # Training
 
+> **Note:** This repository includes a small sample dataset in `playground_data/` for testing purposes only. These files are used to verify that the environment is set up correctly (see [Verify Environment Setup](#verify-environment-setup)). Once setup is confirmed, this folder can be safely deleted to free up space.
+
 ## Data preparation
 In order to start a training session you first need to download training data from https://storage.lczero.org/files/training_data/.
 The **LCZero database** contains multiple versions of the training data format, reflecting changes and improvements over time.<br>
@@ -123,8 +125,50 @@ wget -i lczero_largest_10_tars.txt -c
 ```
 Feel free to modify the text file before starting the download process.
 
+After downloading, extract the `.tar` archives to access the training chunks.
+
+
 ### Data Preprocessing
-TODO: Explain rescoring of the training data
+
+#### Data Format
+
+The LCZero training data exists in multiple format versions. This documentation focuses on **V6**, which is the most recent and recommended format.
+
+The training data is processed by `tf/chunkparser.py`, which converts raw V6 data into a 5-element tuple: `(planes, probs, winner, best_q, plies_left)`.
+
+When interpreted as NumPy arrays, each training example has the following structure:
+
+| Field | Shape | Type | Description |
+|-------|-------|------|-------------|
+| `planes` | `(112, 64)` | float32 | Board state as 112 feature planes, each 8×8 (flattened to 64). The original 104 planes are augmented with 8 additional planes for castling rights, side to move, rule 50 count, and board edge detection. |
+| `probs` | `(1858,)` | float32 | Policy probabilities for all possible moves (corresponds to `float probabilities[1858]` in the V6TrainingData C++ struct). |
+| `winner` | `(3,)` | float32 | Game outcome from the current player's perspective: win, draw, loss probabilities. |
+| `best_q` | `(3,)` | float32 | Position value after search (Q-value), also as win, draw, loss probabilities. |
+| `plies_left` | scalar | float32 | Estimated number of plies remaining until game end. |
+
+For more details, see the [official training tuple documentation](https://github.com/LeelaChessZero/lczero-training/blob/master/docs/training_tuple.md).
+
+#### Rescoring
+
+The raw training data from LCZero is stored in **V6 format**, but this training pipeline requires **V7 format**. The `rescore_file()` function in `tf/chunkparser.py` performs this conversion by computing additional training targets.
+
+**Why rescoring is needed:**
+
+The original V6 data contains only the immediate search results (`root_q`, `root_d`) for each position. However, the transformer architecture benefits from *temporally smoothed* value targets that incorporate information from future positions in the same game. This helps the model learn more stable value estimates.
+
+**What rescoring adds:**
+
+The rescoring process applies an **exponential moving average (EMA)** to the Q-values and draw probabilities across the game trajectory:
+
+- `st_q` (short-term Q): EMA of Q-values with α = 1 - 1/6 (≈ 0.833)
+- `st_d` (short-term D): EMA of draw probabilities with the same α
+
+These smoothed targets provide a more robust training signal by reducing noise from individual position evaluations and incorporating future game outcomes into the value targets.
+
+To rescore your training data, use the `tf/rescore_files.py` script on your downloaded `.gz` chunk files before training:
+```bash
+python tf/rescore_files.py --cfg tf/configs/<CONFIG>.yaml
+```
 
 ## Training Configuration
 TODO: Write something about yaml configurations and explain parameters in the config
