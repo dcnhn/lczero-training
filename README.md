@@ -154,7 +154,9 @@ The raw training data from LCZero is stored in **V6 format**, but this training 
 
 **Why rescoring is needed:**
 
-The original V6 data contains only the immediate search results (`root_q`, `root_d`) for each position. However, the transformer architecture benefits from *temporally smoothed* value targets that incorporate information from future positions in the same game. This helps the model learn more stable value estimates.
+The original V6 data contains `root_q` and `root_d` for each position. These are the Q-value (expected game outcome) and draw probability computed by the **MCTS search** at the root of the search tree. While these values incorporate search information, they are computed **independently for each position** without considering the evaluations of subsequent positions in the same game.
+
+The transformer architecture benefits from *temporally smoothed* value targets that incorporate information from future positions along the game trajectory. This helps the model learn more stable and consistent value estimates.
 
 **What rescoring adds:**
 
@@ -163,12 +165,38 @@ The rescoring process applies an **exponential moving average (EMA)** to the Q-v
 - `st_q` (short-term Q): EMA of Q-values with α = 1 - 1/6 (≈ 0.833)
 - `st_d` (short-term D): EMA of draw probabilities with the same α
 
+For example, if position 20 has `root_q = 0.3` but the following positions 21–25 all have `root_q ≈ 0.5`, the smoothed `st_q` for position 20 will be higher than 0.3 because it incorporates information from future positions.
+
 These smoothed targets provide a more robust training signal by reducing noise from individual position evaluations and incorporating future game outcomes into the value targets.
 
 To rescore your training data, use the `tf/rescore_files.py` script on your downloaded `.gz` chunk files before training:
 ```bash
 python tf/rescore_files.py --cfg tf/configs/<CONFIG>.yaml
 ```
+
+**How the script finds your data:**
+
+The script parses the YAML configuration file and reads all paths listed under `dataset.input`. These paths can be specified as:
+- **Relative paths** (relative to the repository root)
+- **Absolute paths**
+
+You can list multiple directories containing training chunks:
+
+![Data path configuration in YAML](docs/rescore_data_paths.png)
+
+The script will recursively scan all specified directories for `.gz` chunk files and process them. This means you only need to configure your data paths once in the YAML file, and the same configuration can be used for both rescoring and training.
+
+#### Verifying Data Format
+
+After rescoring (or if you're unsure about your data format), you can verify that all chunk files are in the correct V7/V7B format:
+
+```bash
+python tf/check_files_V7B.py --cfg tf/configs/<CONFIG>.yaml
+```
+
+This script reads the same `dataset.input` paths from your YAML configuration and checks each `.gz` file's header to confirm it uses the V7 or V7B format. Any files with incompatible formats will be listed, allowing you to identify and fix issues before training.
+
+
 
 ## Training Configuration
 TODO: Write something about yaml configurations and explain parameters in the config
