@@ -14,6 +14,7 @@ The project adapts the original Leela Chess Zero training pipeline to support tr
 
 This work was carried out in the context of the “Practical Work in AI (Master)” course within the Artificial Intelligence master’s program at Johannes Kepler University Linz (JKU). The results obtained within the scope of this project are **not** presented in this repository. Instead, they are described in detail in a separate report, which is not published here.
 
+Further documentation and detailed references can be found in the [docs/](docs/) folder.
 
 # Setup
 
@@ -83,7 +84,7 @@ python tf/train.py --cfg tf/configs/debug_cpu.yaml  --output ./tmp/debug.txt
 This command runs a small-scale debug training to validate that all dependencies, configurations, and runtime components are working correctly.
 
 A successful run should complete without errors and produce output similar to the following:
-![Successful debug training run](docs/finished_debug_train.png)
+![Successful debug training run](docs/img/finished_debug_train.png)
 
 # Training
 
@@ -130,49 +131,8 @@ After downloading, extract the `.tar` archives to access the training chunks.
 
 
 ### Data Preprocessing
-
-#### Data Format
-
-The LCZero training data exists in multiple format versions. This documentation focuses on **V6**, which is the most recent and recommended format.
-
-The training data is processed by `tf/chunkparser.py`, which converts raw V6 data into a 5-element tuple: `(planes, probs, winner, best_q, plies_left)`.
-
-When interpreted as NumPy arrays, each training example has the following structure:
-
-| Field | Shape | Type | Description |
-|-------|-------|------|-------------|
-| `planes` | `(112, 64)` | float32 | Board state as 112 feature planes, each 8×8 (flattened to 64). The original 104 planes are augmented with 8 additional planes for castling rights, side to move, rule 50 count, and board edge detection. |
-| `probs` | `(1858,)` | float32 | Policy probabilities for all possible moves (corresponds to `float probabilities[1858]` in the V6TrainingData C++ struct). |
-| `winner` | `(3,)` | float32 | Game outcome from the current player's perspective: win, draw, loss probabilities. |
-| `best_q` | `(3,)` | float32 | Position value after search (Q-value), also as win, draw, loss probabilities. |
-| `plies_left` | scalar | float32 | Estimated number of plies remaining until game end. |
-
-For more details, see the [official training tuple documentation](https://github.com/LeelaChessZero/lczero-training/blob/master/docs/training_tuple.md).
-
-#### Rescoring
-
 The raw training data from LCZero is stored in **V6 format**, but this training pipeline requires **V7 format**. The `rescore_file()` function in `tf/chunkparser.py` performs this conversion by computing additional training targets.
-
-**Why rescoring is needed:**
-
-The original V6 data contains `root_q` and `root_d` for each position. These are the Q-value (expected game outcome) and draw probability computed by the **MCTS search** at the root of the search tree. While these values incorporate search information, they are computed **independently for each position** without considering the evaluations of subsequent positions in the same game.
-
-The transformer architecture benefits from *temporally smoothed* value targets that incorporate information from future positions along the game trajectory. This helps the model learn more stable and consistent value estimates.
-
-**What rescoring adds:**
-
-The rescoring process applies an **exponential moving average (EMA)** to the Q-values and draw probabilities across the game trajectory, computed **backwards from the game end**:
-
-- `st_q` (short-term Q): EMA of Q-values with α = 1 - 1/6 (≈ 0.833)
-- `st_d` (short-term D): EMA of draw probabilities with the same α
-
-With α ≈ 0.833, the EMA places **more weight on future positions** (closer to the game end):
-- The current position's value gets weight (1 - α) ≈ **17%**
-- The accumulated value from future positions gets weight α ≈ **83%**
-
-For example, if position 20 has `root_q = 0.3` but the following positions 21–25 all have `root_q ≈ 0.5`, the smoothed `st_q` for position 20 will be higher than 0.3 because it incorporates information from future positions.
-
-These smoothed targets provide a more robust training signal by reducing noise from individual position evaluations and incorporating future game outcomes into the value targets.
+For details on the LCZero data format and the rescoring process, see **[docs/lc0_data.md](docs/lc0_data.md)**.
 
 To rescore your training data, use the `tf/rescore_files.py` script on your downloaded `.gz` chunk files before training:
 ```bash
@@ -185,7 +145,7 @@ The script parses the YAML configuration file and reads all paths listed under `
 
 You can list multiple directories containing training chunks:
 
-![Data path configuration in YAML](docs/rescore_data_paths.png)
+![Data path configuration in YAML](docs/img/rescore_data_paths.png)
 
 The script will recursively scan all specified directories for `.gz` chunk files and process them. This means you only need to configure your data paths once in the YAML file, and the same configuration can be used for both rescoring and training.
 
@@ -203,22 +163,9 @@ This script reads the same `dataset.input` paths from your YAML configuration an
 
 ## Training Configurations
 
-Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/training_config.md)**.
+Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/config_reference.md)**.
 
-Available configurations can be found in `tf/configs`:
-
-| Name | Purpose | Description |
-|------|------------|-------------|
-| `12m_multi_gpu_rmsprop-wAPE.yaml` | Positional Encoding | 12M-parameter configuration for RPE ablation experiments. Uses absolute positional encoding (APE). |
-| `6m_multi_gpu_rmsprop-wRPE.yaml` | Positional Encoding | 6M-parameter configuration for RPE ablation experiments. Uses relative position encoding (RPE). |
-| `6m_multi_gpu_rmsprop-wAPE.yaml` | Positional Encoding | 6M-parameter configuration for RPE ablation experiments. Uses absolute positional encoding (APE). |
-| `6m_multi_gpu_rmsprop-wRPE-newData.yaml` | Training Data Effect | 6M parameter model using newer data from 2026. Used to check if training data impacts model performance. |
-| `6m_multi_gpu_rmsprop-wRPE-smallSet.yaml` | Training Data Effect | 6M parameter model using older data from 2021. Used to check if training data impacts model performance. |
-| `6m_multi_gpu_adamw-wRPE.yaml` | Optimizer Effect | Initial experiments used RMSprop because Nadam led to NaNs in multi-GPU setups. This config uses AdamW to check for improvement or regression compared to RMSprop. |
-| `240m_multi_gpu_adamw.yaml` | Not applicable | 240M parameter model using AdamW optimizer. Hardware was not sufficient for training. |
-| `debug_cpu.yaml` | Setup | Minimal debug configuration for CPU. Only used to verify setup. |
-| `debug.yaml` | Setup | Minimal debug configuration for GPU. Only used to verify setup. |
-| `example.yaml` | Not applicable | Example configuration from https://github.com/daniel-monroe/lczero-training. |
+Available configurations can be found in `tf/configs` or in `tf/param_search`. For a detailed overview of the configurations, go to **[Training Configuration Reference](docs/training_configurations.md)**.
 
 
 ## Training Process

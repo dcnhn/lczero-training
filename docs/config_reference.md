@@ -171,10 +171,10 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `use_rpe_q` | bool | Use Relative Position Encoding for queries. | `true` | :white_check_mark: |
-| `use_rpe_k` | bool | Use Relative Position Encoding for keys. | `true` | :white_check_mark: |
-| `use_rpe_v` | bool | Use Relative Position Encoding for values. | `true` | :white_check_mark: |
-| `use_absolute_pe` | bool | Use Relative Position Encoding for values. | `false` | Only in ablation experiment. |
+| `use_rpe_q` | bool | Use relative position encoding for queries. | `true` | :white_check_mark: |
+| `use_rpe_k` | bool | Use relative position encoding for keys. | `true` | :white_check_mark: |
+| `use_rpe_v` | bool | Use relative position encoding for values. | `true` | :white_check_mark: |
+| `use_absolute_pe` | bool | Use absolute position encoding. | `false` | Only used in ablation experiment. |
 
 ### Smolgen
 
