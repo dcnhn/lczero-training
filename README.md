@@ -1,11 +1,3 @@
-<!-- # Introduction
-
-This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
-
-The project adapts the original Leela Chess Zero training pipeline to support transformer-based architectures. It is intended as a research-oriented codebase for exploring training dynamics, architectural choices, and reproducibility rather than as a polished end-user application. 
-<br>
-The results obtained within the scope of this project are **not** presented in this repository. Instead, they are described in detail in a separate report, which is not published here. -->
-
 # Introduction
 
 This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
@@ -165,18 +157,45 @@ This script reads the same `dataset.input` paths from your YAML configuration an
 
 Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/config_reference.md)**.
 
-Available configurations can be found in `tf/configs` or in `tf/param_search`. For a detailed overview of the configurations, go to **[Training Configuration Reference](docs/training_configurations.md)**.
+Available configurations can be found in `tf/configs` or in `tf/param_search`. For a detailed overview of the configurations, go to **[Training Configurations](docs/training_configurations.md)**.
 
 
 ## Training Process
-TODO: Describe how training is started
+
+Now that all prerequisites and data preparation steps are complete, you can finally start training your model.
+
+During training:
+- TensorBoard logs are automatically written to the `leelalogs` folder.
+- Model checkpoints are saved to the directory specified by `training.path` in your YAML config (e.g., `"networks"`).
+- Additionally, you can export weights in `.txt` format using the `--output` argument.
+
+To launch a training run, use the following command:
+
+```bash
+python tf/train.py --cfg tf/configs/<CONFIG>.yaml --output <PATH_OUTPUT/WEIGHTS>.txt
+```
+
+Replace `<CONFIG>.yaml` with your chosen configuration file and `<PATH_OUTPUT/WEIGHTS>.txt` with the target path where the model weights should be saved as a text file.
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `--cfg` | Yes | Path to the YAML configuration file (e.g., `tf/configs/6m_multi_gpu_rmsprop-wRPE.yaml`). |
+| `--output` | No | Path to a file where models will be written. |
+
 
 
 ## Tensorboard
-TODO: Explain how a board is started
+To view the training progress, use the following command:
+```bash
+tensorboard --logdir leelalogs --port <PORT> --host localhost
+```
 
+For an overview of the logged data, go to **[Logged Training Metrics on Tensorboard](docs/tensorboard_reference.md)**.
 
 # Evaluation
+
+## Visualize Attention Maps
+TODO: Explain how attention maps are visualized
 
 ## Creating an Agent
 TODO: Check out how to create an agent and document here.
