@@ -195,7 +195,52 @@ For an overview of the logged data, go to **[Logged Training Metrics on Tensorbo
 # Evaluation
 
 ## Visualize Attention Maps
-TODO: Explain how attention maps are visualized
+The authors of the paper present a visualization of attention layer activations as heatmaps. For this purpose, you can use the repository [lc0-attention-visualizer](https://github.com/daniel-monroe/lc0-attention-visualizer).
+
+**Quick guide:**
+1. Clone the visualizer repository:
+  ```bash
+  git clone https://github.com/Ergodice/lc0-attention-visualizer.git
+  cd lc0-attention-visualizer
+  ```
+2. Create a suitable conda environment and install the dependencies as described in the visualizer's README.
+3. Add your own repository (this one) to the visualizer directory, either by copying it or cloning it in the root of the visualizer:
+  ```bash
+  git clone https://github.com/dcnhn/lczero-training.git
+  ```
+  Alternatively, paste your local repository into the visualizer directory.
+4. Place your model checkpoints in the `models` folder.
+  - In the config file, make sure to set `return_attn_wts: true` under `model`.
+  - Make sure that the corresponding configuration file is also inside the checkpoints folder
+5. Start the visualization:
+  ```bash
+  python run.py
+  ```
+
+The GUI will open in your browser and display the attention maps as heatmaps.
+For more details and examples, see the visualizer repository.
+
+#### How to paste the checkpoints folder
+During training (if enabled in your config), checkpoints are automatically created, as shown in the image below:
+![Successful debug training run](docs/img/finished_debug_train.png)
+
+To use a trained model with the visualizer, copy a folder with the following structure into the `models` directory:
+
+```
+models/
+  model_checkpoints/
+    config.yaml
+    model_checkpoint1.pb.gz
+    model_checkpoint2.pb.gz
+    ...
+```
+
+Make sure the configuration file matches the model and includes `return_attn_wts: true` under `model`.
+
+#### Fixing Dash Version Mismatch Error
+If you encounter a Dash version mismatch error, adjust the `app.run()` call in `run.py` as shown below:
+
+![Dash version mismatch example](docs/img/attn_viz_mismatch.png)
 
 ## Creating an Agent
 TODO: Check out how to create an agent and document here.
