@@ -223,7 +223,7 @@ For more details and examples, see the visualizer repository.
 #### How to paste the checkpoints folder
 During training (if enabled in your config), checkpoints are automatically created, as shown in the image below:
 
-![Successful debug training run](docs/img/finished_debug_train.png)
+![Checkpoints foler](docs/img/networks_checkpoints.png)
 
 To use a trained model with the visualizer, copy a folder with the following structure into the `models` directory:
 
