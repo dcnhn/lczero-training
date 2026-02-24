@@ -7,7 +7,7 @@ Training is configured through YAML files located in `tf/configs/`. Below is a c
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `name` | string | Unique identifier for the training run. Used for checkpoint directories and TensorBoard logs. | `"my-model"` | :white_check_mark: |
-| `gpu` | string | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
+| `gpu` | string (int for Single-GPU) | GPU configuration. `"none"` for CPU, `0` for single GPU, `"0,1,2,3"` for specific GPUs, `"all"` for all available. | `"0,1,2,3"` | :white_check_mark: |
 
 ## Dataset Settings (`dataset`)
 
@@ -171,10 +171,10 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
-| `use_rpe_q` | bool | Use Relative Position Encoding for queries. | `true` | :white_check_mark: |
-| `use_rpe_k` | bool | Use Relative Position Encoding for keys. | `true` | :white_check_mark: |
-| `use_rpe_v` | bool | Use Relative Position Encoding for values. | `true` | :white_check_mark: |
-| `use_absolute_pe` | bool | Use Relative Position Encoding for values. | `false` | Only in ablation experiment. |
+| `use_rpe_q` | bool | Use relative position encoding for queries. | `true` | :white_check_mark: |
+| `use_rpe_k` | bool | Use relative position encoding for keys. | `true` | :white_check_mark: |
+| `use_rpe_v` | bool | Use relative position encoding for values. | `true` | :white_check_mark: |
+| `use_absolute_pe` | bool | Use absolute position encoding. | `false` | Only used in ablation experiment. |
 
 ### Smolgen
 
@@ -184,7 +184,7 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 |-----------|------|
 | `use_smolgen` | :x:, set to `false` |
 | `smolgen_hidden_channels` | :x: |
-| `smolgen_hidden_sz` | int | :x: |
+| `smolgen_hidden_sz` | :x: |
 | `smolgen_gen_sz` | :x: |
 | `smolgen_activation` | :x: |
 

@@ -1,11 +1,3 @@
-<!-- # Introduction
-
-This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
-
-The project adapts the original Leela Chess Zero training pipeline to support transformer-based architectures. It is intended as a research-oriented codebase for exploring training dynamics, architectural choices, and reproducibility rather than as a polished end-user application. 
-<br>
-The results obtained within the scope of this project are **not** presented in this repository. Instead, they are described in detail in a separate report, which is not published here. -->
-
 # Introduction
 
 This repository is a fork of https://github.com/daniel-monroe/lczero-training. Its primary goal is to reproduce and study the results presented in the paper *“Mastering Chess with a Transformer Model”* (https://arxiv.org/abs/2409.12272).
@@ -14,6 +6,7 @@ The project adapts the original Leela Chess Zero training pipeline to support tr
 
 This work was carried out in the context of the “Practical Work in AI (Master)” course within the Artificial Intelligence master’s program at Johannes Kepler University Linz (JKU). The results obtained within the scope of this project are **not** presented in this repository. Instead, they are described in detail in a separate report, which is not published here.
 
+Further documentation and detailed references can be found in the [docs/](docs/) folder.
 
 # Setup
 
@@ -83,7 +76,7 @@ python tf/train.py --cfg tf/configs/debug_cpu.yaml  --output ./tmp/debug.txt
 This command runs a small-scale debug training to validate that all dependencies, configurations, and runtime components are working correctly.
 
 A successful run should complete without errors and produce output similar to the following:
-![Successful debug training run](docs/finished_debug_train.png)
+![Successful debug training run](docs/img/finished_debug_train.png)
 
 # Training
 
@@ -92,7 +85,8 @@ A successful run should complete without errors and produce output similar to th
 ## Data preparation
 In order to start a training session you first need to download training data from https://storage.lczero.org/files/training_data/.
 The **LCZero database** contains multiple versions of the training data format, reflecting changes and improvements over time.<br>
-⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
+> ⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
+> ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
 
 ### [OPTIONAL] Automated Data Fetching and Download
 
@@ -129,51 +123,8 @@ After downloading, extract the `.tar` archives to access the training chunks.
 
 
 ### Data Preprocessing
-
-> ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
-
-#### Data Format
-
-The LCZero training data exists in multiple format versions. This documentation focuses on **V6**, which is the most recent and recommended format.
-
-The training data is processed by `tf/chunkparser.py`, which converts raw V6 data into a 5-element tuple: `(planes, probs, winner, best_q, plies_left)`.
-
-When interpreted as NumPy arrays, each training example has the following structure:
-
-| Field | Shape | Type | Description |
-|-------|-------|------|-------------|
-| `planes` | `(112, 64)` | float32 | Board state as 112 feature planes, each 8×8 (flattened to 64). The original 104 planes are augmented with 8 additional planes for castling rights, side to move, rule 50 count, and board edge detection. |
-| `probs` | `(1858,)` | float32 | Policy probabilities for all possible moves (corresponds to `float probabilities[1858]` in the V6TrainingData C++ struct). |
-| `winner` | `(3,)` | float32 | Game outcome from the current player's perspective: win, draw, loss probabilities. |
-| `best_q` | `(3,)` | float32 | Position value after search (Q-value), also as win, draw, loss probabilities. |
-| `plies_left` | scalar | float32 | Estimated number of plies remaining until game end. |
-
-For more details, see the [official training tuple documentation](https://github.com/LeelaChessZero/lczero-training/blob/master/docs/training_tuple.md).
-
-#### Rescoring
-
 The raw training data from LCZero is stored in **V6 format**, but this training pipeline requires **V7 format**. The `rescore_file()` function in `tf/chunkparser.py` performs this conversion by computing additional training targets.
-
-**Why rescoring is needed:**
-
-The original V6 data contains `root_q` and `root_d` for each position. These are the Q-value (expected game outcome) and draw probability computed by the **MCTS search** at the root of the search tree. While these values incorporate search information, they are computed **independently for each position** without considering the evaluations of subsequent positions in the same game.
-
-The transformer architecture benefits from *temporally smoothed* value targets that incorporate information from future positions along the game trajectory. This helps the model learn more stable and consistent value estimates.
-
-**What rescoring adds:**
-
-The rescoring process applies an **exponential moving average (EMA)** to the Q-values and draw probabilities across the game trajectory, computed **backwards from the game end**:
-
-- `st_q` (short-term Q): EMA of Q-values with α = 1 - 1/6 (≈ 0.833)
-- `st_d` (short-term D): EMA of draw probabilities with the same α
-
-With α ≈ 0.833, the EMA places **more weight on future positions** (closer to the game end):
-- The current position's value gets weight (1 - α) ≈ **17%**
-- The accumulated value from future positions gets weight α ≈ **83%**
-
-For example, if position 20 has `root_q = 0.3` but the following positions 21–25 all have `root_q ≈ 0.5`, the smoothed `st_q` for position 20 will be higher than 0.3 because it incorporates information from future positions.
-
-These smoothed targets provide a more robust training signal by reducing noise from individual position evaluations and incorporating future game outcomes into the value targets.
+For details on the LCZero data format and the rescoring process, see **[docs/lc0_data.md](docs/lc0_data.md)**.
 
 To rescore your training data, use the `tf/rescore_files.py` script on your downloaded `.gz` chunk files before training:
 ```bash
@@ -186,7 +137,7 @@ The script parses the YAML configuration file and reads all paths listed under `
 
 You can list multiple directories containing training chunks:
 
-![Data path configuration in YAML](docs/rescore_data_paths.png)
+![Data path configuration in YAML](docs/img/rescore_data_paths.png)
 
 The script will recursively scan all specified directories for `.gz` chunk files and process them. This means you only need to configure your data paths once in the YAML file, and the same configuration can be used for both rescoring and training.
 
@@ -202,20 +153,49 @@ This script reads the same `dataset.input` paths from your YAML configuration an
 
 
 
-## Training Configuration
+## Training Configurations
 
-Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/training_config.md)**.
+Training is configured through YAML files located in `tf/configs/`. For a detailed specification of all available parameters, see the **[Training Configuration Reference](docs/config_reference.md)**.
+
+Available configurations can be found in `tf/configs` or in `tf/param_search`. For a detailed overview of the configurations, go to **[Training Configurations](docs/training_configurations.md)**.
 
 
 ## Training Process
-TODO: Describe how training is started
+
+Now that all prerequisites and data preparation steps are complete, you can finally start training your model.
+
+During training:
+- TensorBoard logs are automatically written to the `leelalogs` folder.
+- Model checkpoints are saved to the directory specified by `training.path` in your YAML config (e.g., `"networks"`).
+- Additionally, you can export weights in `.txt` format using the `--output` argument.
+
+To launch a training run, use the following command:
+
+```bash
+python tf/train.py --cfg tf/configs/<CONFIG>.yaml --output <PATH_OUTPUT/WEIGHTS>.txt
+```
+
+Replace `<CONFIG>.yaml` with your chosen configuration file and `<PATH_OUTPUT/WEIGHTS>.txt` with the target path where the model weights should be saved as a text file.
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `--cfg` | Yes | Path to the YAML configuration file (e.g., `tf/configs/6m_multi_gpu_rmsprop-wRPE.yaml`). |
+| `--output` | No | Path to a file where models will be written. |
+
 
 
 ## Tensorboard
-TODO: Explain how a board is started
+To view the training progress, use the following command:
+```bash
+tensorboard --logdir leelalogs --port <PORT> --host localhost
+```
 
+For an overview of the logged data, go to **[Logged Training Metrics on Tensorboard](docs/tensorboard_reference.md)**.
 
 # Evaluation
+
+## Visualize Attention Maps
+TODO: Explain how attention maps are visualized
 
 ## Creating an Agent
 TODO: Check out how to create an agent and document here.
