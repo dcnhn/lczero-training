@@ -182,6 +182,26 @@ Replace `<CONFIG>.yaml` with your chosen configuration file and `<PATH_OUTPUT/WE
 | `--cfg` | Yes | Path to the YAML configuration file (e.g., `tf/configs/6m_multi_gpu_rmsprop-wRPE.yaml`). |
 | `--output` | No | Path to a file where models will be written. |
 
+#### Multi-GPU Training
+Before starting training on a shared system, make sure to set the `CUDA_VISIBLE_DEVICES` environment variable to restrict which GPUs are visible to your process. This helps avoid conflicts with other users who may be using the same machine. You can do this by adapting the following lines in `tf/train.py`:
+```python
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
+```
+
+⚠️ Important: Even after restricting the visible GPUs, they are re-indexed starting from 0 within your process.
+
+For example:
+```python
+import os
+CUDA_VISIBLE_DEVICES=2,3
+```
+
+Then:
+- Physical GPU `2` becomes cuda:`0`
+- Physical GPU `3` becomes cuda:`1`
+
+Therefore, in your YAML configuration file, you must refer to the GPUs using their **local indices (starting from 0)**, not their original system-wide IDs.
 
 
 ## Tensorboard
@@ -203,15 +223,19 @@ The authors of the paper present a visualization of attention layer activations 
   git clone https://github.com/Ergodice/lc0-attention-visualizer.git
   cd lc0-attention-visualizer
   ```
+
 2. Create a suitable conda environment and install the dependencies as described in the visualizer's README.
-3. Add your own repository (this one) to the visualizer directory, either by copying it or cloning it in the root of the visualizer:
+
+3. Add your own repository (this one) to the visualizer directory by cloning it in the root of the visualizer:
   ```bash
   git clone https://github.com/dcnhn/lczero-training.git
   ```
-  Alternatively, paste your local repository into the visualizer directory.
+  Alternatively, just paste your local repository into the visualizer directory.
+
 4. Place your model checkpoints in the `models` folder.
   - In the config file, make sure to set `return_attn_wts: true` under `model`.
   - Make sure that the corresponding configuration file is also inside the checkpoints folder
+
 5. Start the visualization:
   ```bash
   python run.py
