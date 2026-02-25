@@ -3,6 +3,10 @@ training-*/
 *.gz
 .vscode/
 
+# Exclude all protobuf weights except those in the pb_weights directory
+!pb_weights/
+!pb_weights/*.pb.gz
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
