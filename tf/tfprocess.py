@@ -1526,16 +1526,15 @@ class TFProcess:
         grads, grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
 
         if self.cfg['training'].get('check_numerics', False):
-            # Check each gradient for NaN/Inf
-            # and also check the norm.
-            # TODO: Check weights as well?
+            # Iterate over all weights and check for NaN/Inf.
             for i, (g, w) in enumerate(zip(grads, self.model.trainable_weights)):
                 if g is not None:
                     tf.debugging.check_numerics(
                         tf.cast(g, tf.float32),
                         f"Gradient {i} ({w.name}) contains NaN/Inf"
                     )
-            # Also check norm
+            # Validate the global gradient norm to catch exploding gradients 
+            # before they propagate into the weight update.
             tf.debugging.check_numerics(
                 tf.cast(grad_norm, tf.float32),
                 "grad_norm contains NaN/Inf"
