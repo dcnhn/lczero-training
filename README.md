@@ -85,7 +85,7 @@ A successful run should complete without errors and produce output similar to th
 ## Data preparation
 In order to start a training session you first need to download training data from https://storage.lczero.org/files/training_data/.
 The **LCZero database** contains multiple versions of the training data format, reflecting changes and improvements over time.<br>
-> ⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.
+> ⚠️ **Recommendation (as of 2026-02-17):** use training data generated in **2024 or later**, as older datasets may rely on deprecated formats or lack newer features expected by the current training pipeline.<br>
 > ⚠️ **Important:** Data preprocessing is a **required** step. Training will fail with a "memory layout mismatch" error if you attempt to use the data directly without performing the preprocessing.
 
 ### [OPTIONAL] Automated Data Fetching and Download

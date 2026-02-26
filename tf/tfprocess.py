@@ -1339,15 +1339,16 @@ class TFProcess:
     def process_inner_loop(self, x, y, z, q, m, st_q, opp_idx, next_idx):
 
         with tf.GradientTape() as tape:
-            # TODO: Add proper comments
-            ctx = tf.distribute.get_replica_context()
-            rid = ctx.replica_id_in_sync_group if ctx is not None else -1
-            x32 = tf.cast(x, tf.float32)
-            bad = tf.reduce_any(tf.logical_not(tf.math.is_finite(x32)))
-            tf.cond(bad,
+            # Numerics check for inf or nans in x
+            if self.cfg["training"].get("numerics_checks", False):
+                ctx = tf.distribute.get_replica_context()
+                rid = ctx.replica_id_in_sync_group if ctx is not None else -1
+                x32 = tf.cast(x, tf.float32)
+                bad = tf.reduce_any(tf.logical_not(tf.math.is_finite(x32)))
+                tf.cond(bad,
                     lambda: tf.print("replica", rid, ": x has NaN/Inf"),
                     lambda: tf.no_op())
-            tf.debugging.assert_equal(bad, False, message="x has NaN/Inf")
+                tf.debugging.assert_equal(bad, False, message="x has NaN/Inf")
 
             outputs = self.model(x, training=True)
 
