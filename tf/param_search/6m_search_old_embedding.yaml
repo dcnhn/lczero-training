@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-name: "cf-6m-baseline"
+name: "cf-6m-old-embedding"
 gpu: "0,1,2,3" # CPU:"none"; 0 single GPU; "0,1,2,3" multiple GPUs; "all" all available GPUs
 dataset:
   num_chunks: 500_000_000
