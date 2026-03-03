@@ -203,6 +203,25 @@ Then:
 
 Therefore, in your YAML configuration file, you must refer to the GPUs using their **local indices (starting from 0)**, not their original system-wide IDs.
 
+#### Resuming Training
+
+The training pipeline automatically resumes from the latest checkpoint if one exists in the directory specified by `training.path` in your YAML configuration (default: `"networks"`). This means:
+
+- **Automatic Resume**: When you run `python tf/train.py --cfg tf/configs/<CONFIG>.yaml` again, the pipeline will automatically load the latest checkpoint from the network directory and continue training from that step.
+- **Checkpoint Management**: Checkpoints are created at intervals specified by `training.checkpoint_steps` and `training.total_steps`. The `CheckpointManager` automatically keeps the 50 most recent checkpoints and maintains hourly snapshots for long-running training sessions.
+- **No Manual Intervention Required**: As long as checkpoints are enabled (which is the default), you don't need to do anything special to resume training. Simply run the same training command, and it will continue from where it left off.
+
+**Example:**
+```bash
+# Start training
+python tf/train.py --cfg tf/configs/cf-6m-rmsprop-wRPE.yaml --output ./tmp/weights.txt
+
+# If interrupted, simply run the same command again
+# The pipeline will automatically resume from the latest checkpoint
+python tf/train.py --cfg tf/configs/cf-6m-rmsprop-wRPE.yaml --output ./tmp/weights.txt
+```
+
+To disable automatic checkpointing (not recommended), set `disable_checkpoints: true` in your YAML configuration.
 
 ## Tensorboard
 To view the training progress, use the following command:

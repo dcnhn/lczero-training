@@ -158,8 +158,6 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 | `dropout_rate` | float | Dropout rate during training (0.0 = disabled). | `0.1` | `0.1` | 
 
 ### Embedding
-**Note:** `embedding_style` must be set to `"new"` as using `"old"` has caused errors.
-
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `embedding_style` | string | Embedding architecture: `"new"` (recommended) or `"old"`. | `"new"` | Kept at default |
