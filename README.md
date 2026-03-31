@@ -244,6 +244,19 @@ The authors of the paper present a visualization of attention layer activations 
   ```
 
 2. Create a suitable conda environment and install the dependencies as described in the visualizer's README.
+The installation commands below are slightly adapted from the original instructions to ensure compatibility with newer TensorFlow features (e.g., `AdamW`) and to avoid protobuf-related issues.
+```
+conda create -n attention-visualizer python=3.8
+conda activate attention-visualizer
+conda install -c anaconda cudatoolkit
+
+pip install tensorflow==2.12
+pip install protobuf==3.20.3
+pip install tensorflow-addons
+pip install pyyaml
+pip install python-chess
+pip install dash
+```
 
 3. Add your own repository (this one) to the visualizer directory by cloning it in the root of the visualizer:
   ```bash

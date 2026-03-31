@@ -161,7 +161,7 @@ All values in this table are taken directly from the paper ([https://arxiv.org/a
 | Parameter | Type | Description | Example/Default | Used/Adapted in this work |
 |-----------|------|-------------|---------|-------------------|
 | `embedding_style` | string | Embedding architecture: `"new"` (recommended) or `"old"`. | `"new"` | Kept at default |
-| `embedding_dense_sz` | int | Dense layer size in embedding. | `32` | Kept at default |
+| `embedding_dense_sz` | int | Controls the intermediate preprocess feature size before concatenation and final embedding projection. | `32` | Kept at default |
 | `input_type` | string | Input encoding type. `"classic"` for standard board representation. | `"classic"` | Kept at default |
 
 ### Position Encoding (PE)

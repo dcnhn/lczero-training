@@ -246,13 +246,15 @@ def main(cmd):
     
     if "input_validation" in cfg["dataset"]:
         valid_chunks = get_all_chunks(cfg["dataset"]["input_validation"], fast=fast_chunk_loading)
+        validation_workers = cfg["dataset"].get("validation_workers", 4)
         validation_parser = ChunkParser(valid_chunks,
                                         get_input_mode(cfg),
+                                        shuffle_size=1,
                                         sample=1,
                                         batch_size=split_batch_size,
                                         # pc_min=pc_min,
                                         # pc_max=pc_max,
-                                        workers=0)
+                                        workers=validation_workers)
 
     print("Creating TFProcess")
     tfprocess = TFProcess(cfg)

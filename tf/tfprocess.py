@@ -681,7 +681,7 @@ class TFProcess:
 
 
 
-        print(f"params: {self.model.count_params()}")
+        print(f"trainable params: {self.model.count_params()}")
         smolgen_params = np.sum([K.count_params(w) for w in self.model.trainable_weights if "smol" in w.name])
         emb_params = np.sum([K.count_params(w) for w in self.model.trainable_weights if "embedding/preprocess" in w.name])
         rpe_params = np.sum([K.count_params(w) for w in self.model.trainable_weights if "rpe" in w.name])
@@ -1712,8 +1712,9 @@ class TFProcess:
                 if self.swa_enabled:
                     self.calculate_swa_summaries(test_batches, steps)
 
+        validation_steps = self.cfg["training"].get("validation_steps", None)
         if self.validation_dataset is not None and (
-                steps % self.cfg["training"]["validation_steps"] == 0
+                (validation_steps is not None and steps % validation_steps == 0)
                 or steps % self.cfg["training"]["total_steps"] == 0):
             if self.swa_enabled:
                 self.calculate_swa_validations(steps)
@@ -1975,7 +1976,7 @@ class TFProcess:
         print("logging test validations")
         for metric in self.test_metrics:
             metric.reset()
-        for (x, y, z, q, m, st_q, opp_idx, next_idx) in self.validation_dataset:
+        for (x, y, z, q, m, st_q, opp_idx, next_idx, _) in self.validation_dataset:
             if self.strategy is not None:
                 metrics = self.strategy_calculate_test_summaries_inner_loop(
                     x, y, z, q, m, st_q, opp_idx, next_idx)

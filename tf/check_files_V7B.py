@@ -82,9 +82,8 @@ def parallel_check_v7(chunks, n_workers=16, n_jobs=1000):
     print()
     print(f"Total files checked: {total_files}")
     if bad_files:
-        print(f"Non-V7/V7B chunk files found: {len(bad_files)}")
-        for fname in sorted(bad_files):
-            print(fname)
+        print(f"Non-V7/V7B chunk files found: {len(bad_files)}/{total_files}")
+
     else:
         print("All chunk files are V7/V7B.")
 
