@@ -12,6 +12,7 @@ Available configurations can be found in `tf/configs`:
 | `6m_multi_gpu_rmsprop-wRPE-newData.yaml` | Training Data Effect | 6M parameter model using newer data from 2026. Used to check if training data impacts model performance. |
 | `6m_multi_gpu_rmsprop-wRPE-smallSet.yaml` | Training Data Effect | 6M parameter model using older data from 2021. Used to check if training data impacts model performance. |
 | `6m_multi_gpu_adamw-wRPE.yaml` | Optimizer Effect | Initial experiments used RMSprop because Nadam led to NaNs in multi-GPU setups. This config uses AdamW to check for improvement or regression compared to RMSprop. |
+| `cf-tuned.yaml` | Final Training | Final tuned training configuration used for the main full training run. |
 | `240m_multi_gpu_adamw.yaml` | Not applicable | 240M parameter model using AdamW optimizer. Hardware was not sufficient for training. |
 | `debug_cpu.yaml` | Setup | Minimal debug configuration for CPU. Only used to verify setup. |
 | `debug.yaml` | Setup | Minimal debug configuration for GPU. Only used to verify setup. |
@@ -25,8 +26,16 @@ Available hyperparameter search configurations can be found in `tf/param_search`
 
 | Name | Purpose | Description |
 |------|---------|-------------|
+| `12m_search.yaml` | Model Scale | 12M-parameter search baseline (larger embedding/head dimensions) with the standard loss-weight split and RPE enabled. |
 | `6m_search_base.yaml` | Baseline | 6M parameter baseline configuration allocating 64% of the loss budget to the policy and 36% to value heads. |
+| `6m_search_base-1.5xLR.yaml` | Learning Rate | 6M baseline variant with a 1.5x higher initial learning rate (`7.5e-4` vs `5e-4`) to test LR sensitivity. |
+| `6m_search_base-2xLR.yaml` | Learning Rate | 6M baseline variant with a 2x higher initial learning rate (`1e-3` vs `5e-4`) to test LR sensitivity. |
+| `6m_search_embed-dim-128.yaml` | Embedding Preprocess Ablation | 6M baseline variant with `embedding_dense_sz: 128` (wider embedding preprocess width) to test feature-preprocessing capacity. |
+| `6m_search_embed-dim-256.yaml` | Embedding Preprocess Ablation | 6M baseline variant with `embedding_dense_sz: 256` (largest tested preprocess width) to test feature-preprocessing capacity. |
+| `6m_search_old_embedding.yaml` | Embedding Style Ablation | 6M baseline variant using `embedding_style: old` instead of `new` to compare embedding pipeline designs. |
 | `6m_search_pol-0.25.yaml` | Policy vs. Value | 6M parameter configuration allocating 25% of the loss budget to the policy and 75% to value heads. |
 | `6m_search_pol-0.35.yaml` | Policy vs. Value | 6M parameter configuration allocating 35% of the loss budget to the policy and 65% to value heads. |
 | `6m_search_pol-0.5.yaml` | Policy vs. Value | 6M parameter configuration allocating 50% of the loss budget to the policy and 50% to value heads. |
 | `6m_search_pol-0.75.yaml` | Policy vs. Value | 6M parameter configuration allocating 75% of the loss budget to the policy and 25% to value heads. |
+| `6m_search_wdl-1.5.yaml` | Value-Head Weighting | 6M baseline variant with increased `value_winner` loss weight (`1.5`) to emphasize WDL supervision. |
+| `6m_search_wdl-2.0.yaml` | Value-Head Weighting | 6M baseline variant with stronger `value_winner` loss weight (`2.0`) to further emphasize WDL supervision. |

@@ -301,9 +301,11 @@ If you encounter a Dash version mismatch error, adjust the `app.run()` call in `
 
 ## Creating an Agent
 TODO: Check out how to create an agent and document here.
+> ⚠️ **As of 2026-03-31:** This TODO remains open because integrating the trained weights into the `lc0` engine has failed.
 
 ## Puzze-solving Evaluation
 TODO: Check out `https://github.com/google-deepmind/searchless_chess`
+> ⚠️ **As of 2026-03-31:** This TODO also remains open due to its dependency on creating the agent (see section above).
 
 
 
